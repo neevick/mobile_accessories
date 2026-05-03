@@ -5,18 +5,15 @@ import com.mobileshop.model.Product;
 import com.mobileshop.service.ProductService;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Admin Product controller - CRUD operations for products.
  */
-@MultipartConfig(maxFileSize = 16177215)
 public class AdminProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
@@ -161,13 +158,7 @@ public class AdminProductServlet extends HttpServlet {
         Integer stock = parseInt(request.getParameter("stock"));
         Integer categoryId = parseInt(request.getParameter("categoryId"));
 
-        Part imagePart = request.getPart("image");
-        byte[] imageBytes = null;
-
-        if (imagePart != null && imagePart.getSize() > 0) {
-            InputStream inputStream = imagePart.getInputStream();
-            imageBytes = inputStream.readAllBytes();
-        }
+        String image = trim(request.getParameter("image"));
 
         if (name.isEmpty()) errorMsg.append("Product name is required. ");
         if (price == null || price.compareTo(BigDecimal.ZERO) < 0) errorMsg.append("Valid price is required. ");
@@ -192,8 +183,8 @@ public class AdminProductServlet extends HttpServlet {
             product.setStatus(status);
         }
 
-        if (imageBytes != null) {
-            product.setImage(imageBytes);
+        if (!image.isEmpty()) {
+            product.setImage(image);
         }
 
         return product;

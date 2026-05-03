@@ -3,6 +3,7 @@ package com.mobileshop.controller;
 import com.mobileshop.model.Order;
 import com.mobileshop.model.OrderItem;
 import com.mobileshop.model.Product;
+import com.mobileshop.model.User;
 import com.mobileshop.service.OrderService;
 import com.mobileshop.service.ProductService;
 

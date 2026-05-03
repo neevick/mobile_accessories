@@ -48,8 +48,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form action="${pageContext.request.contextPath}/admin/products"
-                              method="post"
-                              enctype="multipart/form-data">
+                              method="post">
 
                             <input type="hidden" name="action" value="${empty product ? 'add' : 'edit'}">
 
