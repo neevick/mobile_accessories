@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.mobileshop</groupId>
-    <artifactId>GadgetZone</artifactId>
+    <artifactId>mobile-accessories</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>GadgetZone - Mobile Accessories Online Shop</name>
+    <name>Mobile Accessories Online Shop</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -57,7 +57,7 @@
     </dependencies>
 
     <build>
-        <finalName>GadgetZone</finalName>
+        <finalName>MobileAccessories</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

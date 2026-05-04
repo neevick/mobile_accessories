@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Wishlist - GadgetZone</title>
+    <title>My Wishlist - Mobile Accessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
@@ -77,7 +77,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 GadgetZone.</p></div>
+        <div class="container"><p>&copy; 2026 Mobile Accessories.</p></div>
     </footer>
 </body>
 </html>
