@@ -48,7 +48,8 @@
                 <div class="card">
                     <div class="card-body">
                         <form action="${pageContext.request.contextPath}/admin/products"
-                              method="post">
+                              method="post"
+                              enctype="multipart/form-data">
 
                             <input type="hidden" name="action" value="${empty product ? 'add' : 'edit'}">
 
@@ -99,8 +100,13 @@
 
                             <div class="form-group">
                                 <label class="form-label">Product Image</label>
+                                <c:if test="${not empty product.image}">
+                                    <div class="mb-1">
+                                        <img src="${pageContext.request.contextPath}/resources/images/${product.image}" alt="Current" style="max-height:120px;border-radius:var(--radius-md)">
+                                    </div>
+                                </c:if>
                                 <input type="file" name="image" class="form-control" accept="image/*">
-                                <small class="text-muted">Upload product image</small>
+                                <small class="text-muted">Upload new image to replace current</small>
                             </div>
 
                             <c:if test="${not empty product}">

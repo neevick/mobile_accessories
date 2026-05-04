@@ -34,7 +34,14 @@
                 <!-- Product Image -->
                 <div style="flex:0 0 300px">
                     <div class="card">
-                        <div style="height:300px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:var(--primary-light);color:var(--primary);border-radius:var(--radius-lg) var(--radius-lg) 0 0">&#128241;</div>
+                        <div style="height:300px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:var(--primary-light);color:var(--primary);border-radius:var(--radius-lg) var(--radius-lg) 0 0">
+                            <c:choose>
+                                <c:when test="${not empty product.image}">
+                                    <img src="${pageContext.request.contextPath}/resources/images/${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg) var(--radius-lg) 0 0">
+                                </c:when>
+                                <c:otherwise>&#128241;</c:otherwise>
+                            </c:choose>
+                        </div>
                         <div class="card-body text-center">
                             <c:if test="${not empty sessionScope.user}">
                                 <c:choose>

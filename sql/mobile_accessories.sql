@@ -31,7 +31,7 @@ CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
-  `image` mediumblob DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -111,7 +111,7 @@ CREATE TABLE `products` (
   `stock` int(11) NOT NULL DEFAULT 0,
   `category_id` int(11) NOT NULL,
   `brand` varchar(100) DEFAULT NULL,
-  `image` mediumblob DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()

@@ -24,7 +24,7 @@ public class ProductService {
 
     // ---- Category Operations ----
 
-    public Category createCategory(String name, String description, StringBuilder errorMsg) {
+    public Category createCategory(String name, String description, String imageFileName, StringBuilder errorMsg) {
         if (ValidationUtil.isNullOrEmpty(name)) {
             errorMsg.append("Category name is required.");
             return null;
@@ -34,6 +34,9 @@ public class ProductService {
             return null;
         }
         Category category = new Category(name, description);
+        if (imageFileName != null && !imageFileName.isEmpty()) {
+            category.setImage(imageFileName);
+        }
         int id = categoryDAO.createCategory(category);
         if (id > 0) {
             category.setId(id);

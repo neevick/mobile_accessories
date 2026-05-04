@@ -3,17 +3,21 @@ package com.mobileshop.controller;
 import com.mobileshop.model.Category;
 import com.mobileshop.model.Product;
 import com.mobileshop.service.ProductService;
+import com.mobileshop.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Admin Product controller - CRUD operations for products.
  */
+@MultipartConfig(maxFileSize = 16177215)
 public class AdminProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
@@ -137,8 +141,16 @@ public class AdminProductServlet extends HttpServlet {
     private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Integer id = parseInt(request.getParameter("id"));
 
-        if (id != null && productService.deleteProduct(id)) {
-            request.getSession().setAttribute("success", "Product deleted successfully!");
+        if (id != null) {
+            Product product = productService.getProductById(id);
+            if (product != null && productService.deleteProduct(id)) {
+                if (product.getImage() != null && !product.getImage().isEmpty()) {
+                    ImageUtil.deleteImage(product.getImage(), request.getServletContext().getRealPath("/"));
+                }
+                request.getSession().setAttribute("success", "Product deleted successfully!");
+            } else {
+                request.getSession().setAttribute("error", "Failed to delete product.");
+            }
         } else {
             request.getSession().setAttribute("error", "Failed to delete product.");
         }
@@ -158,7 +170,16 @@ public class AdminProductServlet extends HttpServlet {
         Integer stock = parseInt(request.getParameter("stock"));
         Integer categoryId = parseInt(request.getParameter("categoryId"));
 
-        String image = trim(request.getParameter("image"));
+        String existingImage = product != null ? product.getImage() : null;
+        String imageFileName = existingImage;
+
+        jakarta.servlet.http.Part imagePart = request.getPart("image");
+        if (imagePart != null && imagePart.getSize() > 0) {
+            String originalName = ImageUtil.getSubmittedFileName(imagePart);
+            try (InputStream is = imagePart.getInputStream()) {
+                imageFileName = ImageUtil.updateImage(is, originalName, existingImage, request.getServletContext().getRealPath("/"));
+            }
+        }
 
         if (name.isEmpty()) errorMsg.append("Product name is required. ");
         if (price == null || price.compareTo(BigDecimal.ZERO) < 0) errorMsg.append("Valid price is required. ");
@@ -183,8 +204,8 @@ public class AdminProductServlet extends HttpServlet {
             product.setStatus(status);
         }
 
-        if (!image.isEmpty()) {
-            product.setImage(image);
+        if (imageFileName != null) {
+            product.setImage(imageFileName);
         }
 
         return product;

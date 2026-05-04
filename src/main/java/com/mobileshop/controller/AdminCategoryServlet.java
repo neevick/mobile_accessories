@@ -2,15 +2,19 @@ package com.mobileshop.controller;
 
 import com.mobileshop.model.Category;
 import com.mobileshop.service.ProductService;
+import com.mobileshop.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
  * Admin Category controller - CRUD operations for categories.
  */
+@MultipartConfig(maxFileSize = 16177215)
 public class AdminCategoryServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
@@ -79,8 +83,17 @@ public class AdminCategoryServlet extends HttpServlet {
         String name = request.getParameter("name");
         String description = request.getParameter("description");
 
+        String imageFileName = null;
+        jakarta.servlet.http.Part imagePart = request.getPart("image");
+        if (imagePart != null && imagePart.getSize() > 0) {
+            String originalName = ImageUtil.getSubmittedFileName(imagePart);
+            try (InputStream is = imagePart.getInputStream()) {
+                imageFileName = ImageUtil.saveImage(is, originalName, request.getServletContext().getRealPath("/"));
+            }
+        }
+
         StringBuilder errorMsg = new StringBuilder();
-        Category category = productService.createCategory(name, description, errorMsg);
+        Category category = productService.createCategory(name, description, imageFileName, errorMsg);
 
         if (category != null) {
             request.getSession().setAttribute("success", "Category added successfully!");
@@ -103,6 +116,18 @@ public class AdminCategoryServlet extends HttpServlet {
         category.setDescription(request.getParameter("description"));
         category.setStatus(request.getParameter("status"));
 
+        String existingImage = category.getImage();
+        jakarta.servlet.http.Part imagePart = request.getPart("image");
+        if (imagePart != null && imagePart.getSize() > 0) {
+            String originalName = ImageUtil.getSubmittedFileName(imagePart);
+            try (InputStream is = imagePart.getInputStream()) {
+                String newImage = ImageUtil.updateImage(is, originalName, existingImage, request.getServletContext().getRealPath("/"));
+                if (newImage != null) {
+                    category.setImage(newImage);
+                }
+            }
+        }
+
         StringBuilder errorMsg = new StringBuilder();
         if (productService.updateCategory(category, errorMsg)) {
             request.getSession().setAttribute("success", "Category updated successfully!");
@@ -116,8 +141,12 @@ public class AdminCategoryServlet extends HttpServlet {
 
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int id = Integer.parseInt(request.getParameter("id"));
+        Category category = productService.getCategoryById(id);
         StringBuilder errorMsg = new StringBuilder();
         if (productService.deleteCategory(id, errorMsg)) {
+            if (category != null && category.getImage() != null && !category.getImage().isEmpty()) {
+                ImageUtil.deleteImage(category.getImage(), request.getServletContext().getRealPath("/"));
+            }
             request.getSession().setAttribute("success", "Category deleted successfully!");
         } else {
             request.getSession().setAttribute("error", errorMsg.toString());

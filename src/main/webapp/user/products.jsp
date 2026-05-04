@@ -67,7 +67,14 @@
                     <div class="product-grid">
                         <c:forEach var="product" items="${products}">
                             <div class="product-card">
-                                <div class="product-image">&#128241;</div>
+                                <div class="product-image">
+                                    <c:choose>
+                                        <c:when test="${not empty product.image}">
+                                            <img src="${pageContext.request.contextPath}/resources/images/${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;">
+                                        </c:when>
+                                        <c:otherwise>&#128241;</c:otherwise>
+                                    </c:choose>
+                                </div>
                                 <div class="product-info">
                                     <div class="product-name">${product.name}</div>
                                     <div class="product-brand">${product.brand}</div>

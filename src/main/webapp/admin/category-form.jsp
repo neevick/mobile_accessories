@@ -43,7 +43,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="${pageContext.request.contextPath}/admin/categories" method="post">
+                            <form action="${pageContext.request.contextPath}/admin/categories" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="${empty category ? 'add' : 'edit'}">
                                 <c:if test="${not empty category}">
                                     <input type="hidden" name="id" value="${category.id}">
@@ -56,6 +56,16 @@
                                 <div class="form-group">
                                     <label class="form-label">Description</label>
                                     <textarea name="description" class="form-control" rows="3">${category.description}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Category Image</label>
+                                    <c:if test="${not empty category.image}">
+                                        <div class="mb-1">
+                                            <img src="${pageContext.request.contextPath}/resources/images/${category.image}" alt="Current" style="max-height:120px;border-radius:var(--radius-md)">
+                                        </div>
+                                    </c:if>
+                                    <input type="file" name="image" class="form-control" accept="image/*">
+                                    <small class="text-muted">Upload new image to replace current</small>
                                 </div>
                                 <c:if test="${not empty category}">
                                     <div class="form-group">

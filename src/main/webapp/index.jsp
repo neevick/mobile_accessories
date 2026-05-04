@@ -81,7 +81,7 @@
                                 <div class="product-image">
                                     <c:choose>
                                         <c:when test="${not empty product.image}">
-                                            <img src="${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg) var(--radius-lg) 0 0">
+                                            <img src="${pageContext.request.contextPath}/resources/images/${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg) var(--radius-lg) 0 0">
                                         </c:when>
                                         <c:otherwise>&#128241;</c:otherwise>
                                     </c:choose>
