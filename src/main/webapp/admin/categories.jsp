@@ -26,11 +26,14 @@
                 <aside class="admin-sidebar">
                     <div class="sidebar-header">Admin Panel</div>
                     <ul class="sidebar-nav">
-                        <li><a href="${pageContext.request.contextPath}/admin/dashboard">&#128202; Dashboard</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/products">&#128230; Products</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/categories" class="active">&#128193; Categories</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/orders">&#128196; Orders</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/users">&#128101; Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/categories" class="active">Categories</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/reports">Reports</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/analytics">Analytics</a></li>
+                        
                     </ul>
                 </aside>
 
@@ -60,22 +63,18 @@
                                                     <th>ID</th>
                                                     <th>Name</th>
                                                     <th>Description</th>
-                                                    <th>Products</th>
-                                                    <th>Status</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <c:forEach var="cat" items="${categories}">
                                                     <tr>
-                                                        <td>${cat.id}</td>
+                                                        <td>${cat.categoryId}</td>
                                                         <td>${cat.name}</td>
                                                         <td>${cat.description}</td>
-                                                        <td>${cat.productCount}</td>
-                                                        <td><span class="badge badge-${cat.status == 'active' ? 'success' : 'danger'}">${cat.status}</span></td>
                                                         <td>
-                                                            <a href="${pageContext.request.contextPath}/admin/categories?action=edit&id=${cat.id}" class="btn btn-sm btn-primary">Edit</a>
-                                                            <a href="${pageContext.request.contextPath}/admin/categories?action=delete&id=${cat.id}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this category?')">Delete</a>
+                                                            <a href="${pageContext.request.contextPath}/admin/categories?action=edit&id=${cat.categoryId}" class="btn btn-sm btn-primary">Edit</a>
+                                                            <a href="${pageContext.request.contextPath}/admin/categories?action=delete&id=${cat.categoryId}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this category?')">Delete</a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -95,7 +94,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories Admin.</p></div>
+        <div class="container"><p>&copy; 2026 GadgetZone Admin.</p></div>
     </footer>
 </body>
 </html>

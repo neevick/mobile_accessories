@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  * OrderItem model representing a single item within an order.
  */
 public class OrderItem {
-    private int id;
+    private int orderItemId;
     private int orderId;
     private int productId;
     private int quantity;
@@ -23,8 +23,8 @@ public class OrderItem {
         this.price = price;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getOrderItemId() { return orderItemId; }
+    public void setOrderItemId(int orderItemId) { this.orderItemId = orderItemId; }
 
     public int getOrderId() { return orderId; }
     public void setOrderId(int orderId) { this.orderId = orderId; }
@@ -50,6 +50,6 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return "OrderItem{id=" + id + ", productId=" + productId + ", quantity=" + quantity + ", price=" + price + "}";
+        return "OrderItem{orderItemId=" + orderItemId + ", productId=" + productId + ", quantity=" + quantity + ", price=" + price + "}";
     }
 }

@@ -41,7 +41,7 @@ public class ReviewDAO {
 
     public List<Review> getReviewsByProductId(int productId) {
         List<Review> reviews = new ArrayList<>();
-        String sql = "SELECT r.*, u.full_name AS user_name FROM reviews r LEFT JOIN users u ON r.user_id = u.id WHERE r.product_id = ? ORDER BY r.created_at DESC";
+        String sql = "SELECT r.*, u.full_name AS user_name FROM reviews r LEFT JOIN users u ON r.user_id = u.user_id WHERE r.product_id = ? ORDER BY r.created_at DESC";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -79,7 +79,7 @@ public class ReviewDAO {
     }
 
     public boolean deleteReview(int id) {
-        String sql = "DELETE FROM reviews WHERE id = ?";
+        String sql = "DELETE FROM reviews WHERE review_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -90,14 +90,14 @@ public class ReviewDAO {
         } catch (SQLException e) {
             System.err.println("Error deleting review: " + e.getMessage());
         } finally {
-            DBUtil.close(null, ps, conn);
+            DBUtil.closeAll(null, ps, conn);
         }
         return false;
     }
 
     private Review mapResultSetToReview(ResultSet rs) throws SQLException {
         Review review = new Review();
-        review.setId(rs.getInt("id"));
+        review.setReviewId(rs.getInt("review_id"));
         review.setUserId(rs.getInt("user_id"));
         review.setProductId(rs.getInt("product_id"));
         review.setRating(rs.getInt("rating"));

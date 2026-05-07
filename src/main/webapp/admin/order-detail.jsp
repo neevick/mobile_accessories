@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order #${order.id} - Mobile Accessories Admin</title>
+    <title>Order #${order.orderId} - Mobile Accessories Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
@@ -32,12 +32,13 @@
                         <li><a href="${pageContext.request.contextPath}/admin/categories">&#128193; Categories</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/orders" class="active">&#128196; Orders</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/users">&#128101; Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/reports">&#128202; Reports</a></li>
                     </ul>
                 </aside>
 
                 <div class="admin-content">
                     <div class="flex-between mb-2">
-                        <h1>Order #${order.id}</h1>
+                        <h1>Order #${order.orderId}</h1>
                         <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-outline">&larr; Back to Orders</a>
                     </div>
 
@@ -74,7 +75,7 @@
                         <div class="card-body">
                             <form action="${pageContext.request.contextPath}/admin/orders" method="post" class="d-flex gap-1">
                                 <input type="hidden" name="action" value="updateStatus">
-                                <input type="hidden" name="orderId" value="${order.id}">
+                                <input type="hidden" name="orderId" value="${order.orderId}">
                                 <select name="status" class="form-control" style="max-width:200px">
                                     <option value="pending" ${order.status == 'pending' ? 'selected' : ''}>Pending</option>
                                     <option value="confirmed" ${order.status == 'confirmed' ? 'selected' : ''}>Confirmed</option>

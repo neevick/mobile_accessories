@@ -6,7 +6,9 @@ import com.mobileshop.util.DBUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data Access Object for Order and OrderItem entities.
@@ -22,7 +24,7 @@ public class OrderDAO {
     public int createOrder(Order order, List<OrderItem> items) {
         String orderSql = "INSERT INTO orders (user_id, total_amount, status, shipping_address, phone) VALUES (?, ?, ?, ?, ?)";
         String itemSql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
-        String stockSql = "UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?";
+        String stockSql = "UPDATE products SET stock = stock - ? WHERE product_id = ? AND stock >= ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -75,7 +77,7 @@ public class OrderDAO {
     }
 
     public Order getOrderById(int id) {
-        String sql = "SELECT o.*, u.full_name AS user_name, u.email AS user_email FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.id = ?";
+        String sql = "SELECT o.*, u.full_name AS user_name, u.email AS user_email FROM orders o LEFT JOIN users u ON o.user_id = u.user_id WHERE o.order_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -95,7 +97,7 @@ public class OrderDAO {
 
     public List<Order> getOrdersByUserId(int userId) {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT o.*, u.full_name AS user_name, u.email AS user_email FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.user_id = ? ORDER BY o.order_date DESC";
+        String sql = "SELECT o.*, u.full_name AS user_name, u.email AS user_email FROM orders o LEFT JOIN users u ON o.user_id = u.user_id WHERE o.user_id = ? ORDER BY o.order_date DESC";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -115,7 +117,7 @@ public class OrderDAO {
 
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT o.*, u.full_name AS user_name, u.email AS user_email FROM orders o LEFT JOIN users u ON o.user_id = u.id ORDER BY o.order_date DESC";
+        String sql = "SELECT o.*, u.full_name AS user_name, u.email AS user_email FROM orders o LEFT JOIN users u ON o.user_id = u.user_id ORDER BY o.order_date DESC";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -134,7 +136,7 @@ public class OrderDAO {
 
     public List<OrderItem> getOrderItems(int orderId) {
         List<OrderItem> items = new ArrayList<>();
-        String sql = "SELECT oi.*, p.name AS product_name, p.image AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?";
+        String sql = "SELECT oi.*, p.name AS product_name, p.image AS product_image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -145,7 +147,7 @@ public class OrderDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 OrderItem item = new OrderItem();
-                item.setId(rs.getInt("id"));
+                item.setOrderItemId(rs.getInt("order_item_id"));
                 item.setOrderId(rs.getInt("order_id"));
                 item.setProductId(rs.getInt("product_id"));
                 item.setQuantity(rs.getInt("quantity"));
@@ -163,7 +165,7 @@ public class OrderDAO {
     }
 
     public boolean updateOrderStatus(int orderId, String status) {
-        String sql = "UPDATE orders SET status = ? WHERE id = ?";
+        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -175,7 +177,7 @@ public class OrderDAO {
         } catch (SQLException e) {
             System.err.println("Error updating order status: " + e.getMessage());
         } finally {
-            DBUtil.close(null, ps, conn);
+            DBUtil.closeAll(null, ps, conn);
         }
         return false;
     }
@@ -235,9 +237,105 @@ public class OrderDAO {
         return java.math.BigDecimal.ZERO;
     }
 
+    /**
+     * Counts orders considered "sales".
+     */
+    public int countSales() {
+        String sql = "SELECT COUNT(*) FROM orders WHERE status IN ('confirmed', 'shipped', 'delivered')";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error counting sales: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return 0;
+    }
+
+    /**
+     * Monthly revenue for delivered/confirmed/shipped orders.
+     * Key is formatted as YYYY-MM.
+     */
+    public Map<String, java.math.BigDecimal> getMonthlyRevenue(int limitMonths) {
+        Map<String, java.math.BigDecimal> out = new LinkedHashMap<>();
+        String sql =
+                "SELECT DATE_FORMAT(order_date, '%Y-%m') AS ym, COALESCE(SUM(total_amount),0) AS revenue " +
+                "FROM orders " +
+                "WHERE status IN ('confirmed','shipped','delivered') " +
+                "GROUP BY ym " +
+                "ORDER BY ym DESC " +
+                "LIMIT ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, Math.max(1, limitMonths));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                out.put(rs.getString("ym"), rs.getBigDecimal("revenue"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting monthly revenue: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return out;
+    }
+
+    /**
+     * Top-selling products by quantity, limited.
+     */
+    public Map<String, Integer> getTopSellingProducts(int limit) {
+        Map<String, Integer> out = new LinkedHashMap<>();
+        String sql =
+                "SELECT p.name AS product_name, COALESCE(SUM(oi.quantity),0) AS qty " +
+                "FROM order_items oi " +
+                "JOIN orders o ON o.order_id = oi.order_id " +
+                "JOIN products p ON p.product_id = oi.product_id " +
+                "WHERE o.status IN ('confirmed','shipped','delivered') " +
+                "GROUP BY p.product_id, p.name " +
+                "ORDER BY qty DESC " +
+                "LIMIT ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, Math.max(1, limit));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                out.put(rs.getString("product_name"), rs.getInt("qty"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting top selling products: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return out;
+    }
+
+    /**
+     * Top order items (product -> qty sold), limited.
+     * Kept separate from top products to match assignment wording.
+     */
+    public Map<String, Integer> getTopOrderItems(int limit) {
+        return getTopSellingProducts(limit);
+    }
+
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
-        order.setId(rs.getInt("id"));
+        order.setOrderId(rs.getInt("order_id"));
         order.setUserId(rs.getInt("user_id"));
         order.setTotalAmount(rs.getBigDecimal("total_amount"));
         order.setStatus(rs.getString("status"));

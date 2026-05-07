@@ -24,7 +24,7 @@ public class ProductService {
 
     // ---- Category Operations ----
 
-    public Category createCategory(String name, String description, String imageFileName, StringBuilder errorMsg) {
+    public Category createCategory(String name, String description, StringBuilder errorMsg) {
         if (ValidationUtil.isNullOrEmpty(name)) {
             errorMsg.append("Category name is required.");
             return null;
@@ -34,12 +34,9 @@ public class ProductService {
             return null;
         }
         Category category = new Category(name, description);
-        if (imageFileName != null && !imageFileName.isEmpty()) {
-            category.setImage(imageFileName);
-        }
         int id = categoryDAO.createCategory(category);
         if (id > 0) {
-            category.setId(id);
+            category.setCategoryId(id);
             return category;
         }
         errorMsg.append("Failed to create category.");
@@ -64,7 +61,7 @@ public class ProductService {
             return false;
         }
         Category existing = categoryDAO.getCategoryByName(category.getName());
-        if (existing != null && existing.getId() != category.getId()) {
+        if (existing != null && existing.getCategoryId() != category.getCategoryId()) {
             errorMsg.append("Category with this name already exists.");
             return false;
         }
@@ -110,7 +107,7 @@ public class ProductService {
         product.setImage(image);
         int id = productDAO.createProduct(product);
         if (id > 0) {
-            product.setId(id);
+            product.setProductId(id);
             return product;
         }
         errorMsg.append("Failed to create product.");
@@ -144,6 +141,15 @@ public class ProductService {
 
     public boolean updateProduct(Product product) {
         return productDAO.updateProduct(product);
+    }
+
+    public boolean addProduct(Product product) {
+        int id = productDAO.createProduct(product);
+        if (id > 0) {
+            product.setProductId(id);
+            return true;
+        }
+        return false;
     }
 
     public boolean deleteProduct(int id) {

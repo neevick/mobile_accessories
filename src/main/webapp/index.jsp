@@ -28,7 +28,6 @@
                             <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
                         </c:if>
                         <li><a href="${pageContext.request.contextPath}/orders?action=cart">Cart</a></li>
-                        <li><a href="${pageContext.request.contextPath}/wishlist?action=list">Wishlist</a></li>
                         <li><a href="${pageContext.request.contextPath}/profile" class="nav-user">&#128100; ${sessionScope.userName}</a></li>
                         <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
                     </c:when>
@@ -97,7 +96,7 @@
                                         </c:choose>
                                     </div>
                                     <div class="product-actions">
-                                        <a href="${pageContext.request.contextPath}/products?action=detail&id=${product.id}" class="btn btn-sm btn-primary">View</a>
+                                        <a href="${pageContext.request.contextPath}/products?action=detail&id=${product.productId}" class="btn btn-sm btn-primary">View</a>
                                     </div>
                                 </div>
                             </div>

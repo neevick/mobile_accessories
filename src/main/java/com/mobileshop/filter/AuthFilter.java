@@ -31,18 +31,7 @@ public class AuthFilter implements Filter {
 
         // Check if user is logged in
         if (session == null || session.getAttribute("user") == null) {
-            // Check for rememberMe cookie
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("rememberMe".equals(cookie.getName())) {
-                        // Redirect to auto-login or just let them login again
-                        break;
-                    }
-                }
-            }
-            request.setAttribute("error", "Please log in to access this page.");
-            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
+            response.sendRedirect(contextPath + "/auth?action=login");
             return;
         }
 
@@ -52,17 +41,6 @@ public class AuthFilter implements Filter {
         if (uri.startsWith(contextPath + "/admin/")) {
             if (!user.isAdmin()) {
                 response.sendRedirect(contextPath + "/products");
-                return;
-            }
-        }
-
-        // User area protection - both admin and user can access
-        if (uri.startsWith(contextPath + "/user/") || uri.startsWith(contextPath + "/orders") || uri.startsWith(contextPath + "/wishlist") || uri.startsWith(contextPath + "/profile")) {
-            // Active users only
-            if (!"active".equals(user.getStatus())) {
-                session.invalidate();
-                request.setAttribute("error", "Your account is not active. Please contact admin.");
-                request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
                 return;
             }
         }

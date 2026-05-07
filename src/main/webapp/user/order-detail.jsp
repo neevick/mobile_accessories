@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order #${order.id} - Mobile Accessories</title>
+    <title>Order #${order.orderId} - Mobile Accessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
     <main class="main-content">
         <div class="container">
             <div class="flex-between mb-2">
-                <h1>Order #${order.id}</h1>
+                <h1>Order #${order.orderId}</h1>
                 <a href="${pageContext.request.contextPath}/orders?action=history" class="btn btn-outline">&larr; My Orders</a>
             </div>
 

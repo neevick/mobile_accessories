@@ -11,7 +11,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand"><span class="brand-icon">&#9881;</span> Mobile Acessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand"><span class="brand-icon">&#9881;</span> Mobile Accessories</a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
                 <li><a href="${pageContext.request.contextPath}/admin/categories" class="active">Categories</a></li>
@@ -31,6 +31,7 @@
                         <li><a href="${pageContext.request.contextPath}/admin/categories" class="active">&#128193; Categories</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/orders">&#128196; Orders</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/users">&#128101; Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/reports">&#128202; Reports</a></li>
                     </ul>
                 </aside>
 
@@ -43,10 +44,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="${pageContext.request.contextPath}/admin/categories" method="post" enctype="multipart/form-data">
+                            <form action="${pageContext.request.contextPath}/admin/categories" method="post">
                                 <input type="hidden" name="action" value="${empty category ? 'add' : 'edit'}">
                                 <c:if test="${not empty category}">
-                                    <input type="hidden" name="id" value="${category.id}">
+                                    <input type="hidden" name="id" value="${category.categoryId}">
                                 </c:if>
 
                                 <div class="form-group">
@@ -57,25 +58,6 @@
                                     <label class="form-label">Description</label>
                                     <textarea name="description" class="form-control" rows="3">${category.description}</textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Category Image</label>
-                                    <c:if test="${not empty category.image}">
-                                        <div class="mb-1">
-                                            <img src="${pageContext.request.contextPath}/resources/images/${category.image}" alt="Current" style="max-height:120px;border-radius:var(--radius-md)">
-                                        </div>
-                                    </c:if>
-                                    <input type="file" name="image" class="form-control" accept="image/*">
-                                    <small class="text-muted">Upload new image to replace current</small>
-                                </div>
-                                <c:if test="${not empty category}">
-                                    <div class="form-group">
-                                        <label class="form-label">Status</label>
-                                        <select name="status" class="form-control">
-                                            <option value="active" ${category.status == 'active' ? 'selected' : ''}>Active</option>
-                                            <option value="inactive" ${category.status == 'inactive' ? 'selected' : ''}>Inactive</option>
-                                        </select>
-                                    </div>
-                                </c:if>
                                 <div class="d-flex gap-2 mt-2">
                                     <button type="submit" class="btn btn-primary">${empty category ? 'Add Category' : 'Update Category'}</button>
                                     <a href="${pageContext.request.contextPath}/admin/categories" class="btn btn-outline">Cancel</a>

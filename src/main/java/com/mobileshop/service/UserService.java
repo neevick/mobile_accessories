@@ -65,7 +65,7 @@ public class UserService {
         User user = new User(username, email, password, fullName, phone, address);
         int id = userDAO.createUser(user);
         if (id > 0) {
-            user.setId(id);
+            user.setUserId(id);
             return user;
         }
         errorMsg.append("Registration failed. Please try again.");
@@ -82,7 +82,7 @@ public class UserService {
         }
         User user = userDAO.authenticateUser(username, password);
         if (user == null) {
-            errorMsg.append("Invalid username or password, or your account is not yet approved.");
+            errorMsg.append("Invalid username or password.");
             return null;
         }
         return user;
@@ -94,18 +94,6 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userDAO.getAllUsers();
-    }
-
-    public List<User> getPendingUsers() {
-        return userDAO.getPendingUsers();
-    }
-
-    public boolean approveUser(int userId) {
-        return userDAO.updateUserStatus(userId, "active");
-    }
-
-    public boolean rejectUser(int userId) {
-        return userDAO.updateUserStatus(userId, "inactive");
     }
 
     public boolean updateUser(User user) {

@@ -13,7 +13,7 @@ import java.util.List;
 public class CategoryDAO {
 
     public int createCategory(Category category) {
-        String sql = "INSERT INTO categories (name, description, image, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -22,8 +22,6 @@ public class CategoryDAO {
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, category.getName());
             ps.setString(2, category.getDescription());
-            ps.setString(3, category.getImage());
-            ps.setString(4, category.getStatus());
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
                 rs = ps.getGeneratedKeys();
@@ -38,7 +36,7 @@ public class CategoryDAO {
     }
 
     public Category getCategoryById(int id) {
-        String sql = "SELECT c.*, (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id AND p.status = 'active') AS product_count FROM categories c WHERE c.id = ?";
+        String sql = "SELECT * FROM categories WHERE category_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -77,7 +75,7 @@ public class CategoryDAO {
 
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
-        String sql = "SELECT c.*, (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id AND p.status = 'active') AS product_count FROM categories c ORDER BY c.name";
+        String sql = "SELECT * FROM categories ORDER BY name";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -95,26 +93,12 @@ public class CategoryDAO {
     }
 
     public List<Category> getActiveCategories() {
-        List<Category> categories = new ArrayList<>();
-        String sql = "SELECT c.*, (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id AND p.status = 'active') AS product_count FROM categories c WHERE c.status = 'active' ORDER BY c.name";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = DBUtil.getConnection();
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) categories.add(mapResultSetToCategory(rs));
-        } catch (SQLException e) {
-            System.err.println("Error getting active categories: " + e.getMessage());
-        } finally {
-            DBUtil.closeAll(rs, ps, conn);
-        }
-        return categories;
+        // Current schema has no category status column; treat all categories as active.
+        return getAllCategories();
     }
 
     public boolean updateCategory(Category category) {
-        String sql = "UPDATE categories SET name = ?, description = ?, image = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -122,20 +106,19 @@ public class CategoryDAO {
             ps = conn.prepareStatement(sql);
             ps.setString(1, category.getName());
             ps.setString(2, category.getDescription());
-            ps.setString(3, category.getImage());
-            ps.setString(4, category.getStatus());
-            ps.setInt(5, category.getId());
+            ps.setInt(3, category.getCategoryId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error updating category: " + e.getMessage());
         } finally {
-            DBUtil.close(null, ps, conn);
+            DBUtil.close(ps);
+            DBUtil.close(conn);
         }
         return false;
     }
 
     public boolean deleteCategory(int id) {
-        String sql = "DELETE FROM categories WHERE id = ?";
+        String sql = "DELETE FROM categories WHERE category_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -146,7 +129,8 @@ public class CategoryDAO {
         } catch (SQLException e) {
             System.err.println("Error deleting category: " + e.getMessage());
         } finally {
-            DBUtil.close(null, ps, conn);
+            DBUtil.close(ps);
+            DBUtil.close(conn);
         }
         return false;
     }
@@ -171,11 +155,9 @@ public class CategoryDAO {
 
     private Category mapResultSetToCategory(ResultSet rs) throws SQLException {
         Category category = new Category();
-        category.setId(rs.getInt("id"));
+        category.setCategoryId(rs.getInt("category_id"));
         category.setName(rs.getString("name"));
         category.setDescription(rs.getString("description"));
-        category.setImage(rs.getString("image"));
-        category.setStatus(rs.getString("status"));
         category.setCreatedAt(rs.getTimestamp("created_at"));
         try {
             category.setProductCount(rs.getInt("product_count"));

@@ -25,7 +25,6 @@
                             <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
                         </c:if>
                         <li><a href="${pageContext.request.contextPath}/orders?action=cart">Cart</a></li>
-                        <li><a href="${pageContext.request.contextPath}/wishlist?action=list">Wishlist</a></li>
                         <li><a href="${pageContext.request.contextPath}/profile" class="nav-user">&#128100; ${sessionScope.userName}</a></li>
                         <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
                     </c:when>
@@ -53,7 +52,7 @@
             <div class="category-filter">
                 <a href="${pageContext.request.contextPath}/products" class="${empty currentCategory && empty keyword ? 'active' : ''}">All</a>
                 <c:forEach var="cat" items="${categories}">
-                    <a href="${pageContext.request.contextPath}/products?action=category&id=${cat.id}" class="${not empty currentCategory && currentCategory.id == cat.id ? 'active' : ''}">${cat.name}</a>
+                    <a href="${pageContext.request.contextPath}/products?action=category&id=${cat.categoryId}" class="${not empty currentCategory && currentCategory.categoryId == cat.categoryId ? 'active' : ''}">${cat.name}</a>
                 </c:forEach>
             </div>
 
@@ -86,9 +85,9 @@
                                         </c:choose>
                                     </div>
                                     <div class="product-actions">
-                                        <a href="${pageContext.request.contextPath}/products?action=detail&id=${product.id}" class="btn btn-sm btn-primary">View</a>
+                                        <a href="${pageContext.request.contextPath}/products?action=detail&id=${product.productId}" class="btn btn-sm btn-primary">View</a>
                                         <c:if test="${product.stock > 0 && not empty sessionScope.user}">
-                                            <a href="${pageContext.request.contextPath}/orders?action=addToCart&productId=${product.id}" class="btn btn-sm btn-success">Add to Cart</a>
+                                            <a href="${pageContext.request.contextPath}/orders?action=addToCart&productId=${product.productId}" class="btn btn-sm btn-success">Add to Cart</a>
                                         </c:if>
                                     </div>
                                 </div>

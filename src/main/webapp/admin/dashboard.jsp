@@ -12,7 +12,7 @@
     <nav class="navbar">
         <div class="container">
             <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-                <span class="brand-icon">&#9881;</span> Mobile Accessories
+                <span class="brand-icon"></span> Mobile Accessories
             </a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/">Home</a></li>
@@ -30,11 +30,13 @@
                 <aside class="admin-sidebar">
                     <div class="sidebar-header">Admin Panel</div>
                     <ul class="sidebar-nav">
-                        <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">&#128202; Dashboard</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/products">&#128230; Products</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/categories">&#128193; Categories</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/orders">&#128196; Orders</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/users">&#128101; Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/reports">Reports</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/analytics">Analytics</a></li>
                     </ul>
                 </aside>
 
@@ -50,28 +52,28 @@
                     <!-- Stats -->
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-icon blue">&#128230;</div>
+                            <div class="stat-icon blue"></div>
                             <div class="stat-info">
                                 <div class="stat-value">${totalProducts}</div>
                                 <div class="stat-label">Total Products</div>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon green">&#128176;</div>
+                            <div class="stat-icon green"></div>
                             <div class="stat-info">
                                 <div class="stat-value">$${revenue}</div>
                                 <div class="stat-label">Total Revenue</div>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon yellow">&#128196;</div>
+                            <div class="stat-icon yellow"></div>
                             <div class="stat-info">
                                 <div class="stat-value">${totalOrders}</div>
                                 <div class="stat-label">Total Orders</div>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon red">&#128101;</div>
+                            <div class="stat-icon red"></div>
                             <div class="stat-info">
                                 <div class="stat-value">${totalUsers}</div>
                                 <div class="stat-label">Total Users</div>
@@ -111,12 +113,12 @@
                                             <tbody>
                                                 <c:forEach var="order" items="${recentOrders}">
                                                     <tr>
-                                                        <td>#${order.id}</td>
+                                                        <td>#${order.orderId}</td>
                                                         <td>${order.userName}</td>
                                                         <td>$${order.totalAmount}</td>
                                                         <td><span class="badge badge-${order.status == 'pending' ? 'warning' : order.status == 'delivered' ? 'success' : order.status == 'cancelled' ? 'danger' : 'info'}">${order.status}</span></td>
                                                         <td>${order.orderDate}</td>
-                                                        <td><a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=${order.id}" class="btn btn-sm btn-outline">View</a></td>
+                                                        <td><a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=${order.orderId}" class="btn btn-sm btn-outline">View</a></td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>

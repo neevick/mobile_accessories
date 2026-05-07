@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * Order model representing a customer order.
  */
 public class Order {
-    private int id;
+    private int orderId;
     private int userId;
     private BigDecimal totalAmount;
     private String status;
@@ -21,8 +21,8 @@ public class Order {
 
     public Order() {}
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getOrderId() { return orderId; }
+    public void setOrderId(int orderId) { this.orderId = orderId; }
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
@@ -53,6 +53,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{id=" + id + ", userId=" + userId + ", totalAmount=" + totalAmount + ", status='" + status + "'}";
+        return "Order{orderId=" + orderId + ", userId=" + userId + ", totalAmount=" + totalAmount + ", status='" + status + "'}";
     }
 }

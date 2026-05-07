@@ -42,7 +42,7 @@ public class ProductDAO {
     }
 
     public Product getProductById(int id) {
-        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.id = ?";
+        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.product_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -62,7 +62,7 @@ public class ProductDAO {
 
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.created_at DESC";
+        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id ORDER BY p.created_at DESC";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -81,7 +81,7 @@ public class ProductDAO {
 
     public List<Product> getActiveProducts() {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.status = 'active' ORDER BY p.created_at DESC";
+        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.status = 'active' ORDER BY p.created_at DESC";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -100,7 +100,7 @@ public class ProductDAO {
 
     public List<Product> getFeaturedProducts(int limit) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.status = 'active' ORDER BY p.created_at DESC LIMIT ?";
+        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.status = 'active' ORDER BY p.created_at DESC LIMIT ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -120,7 +120,7 @@ public class ProductDAO {
 
     public List<Product> getProductsByCategory(int categoryId) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.category_id = ? AND p.status = 'active' ORDER BY p.name";
+        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.category_id = ? AND p.status = 'active' ORDER BY p.name";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -140,7 +140,7 @@ public class ProductDAO {
 
     public List<Product> searchProducts(String keyword) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.status = 'active' AND (p.name LIKE ? OR p.brand LIKE ? OR p.description LIKE ?) ORDER BY p.name";
+        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.status = 'active' AND (p.name LIKE ? OR p.brand LIKE ? OR p.description LIKE ?) ORDER BY p.name";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -162,7 +162,7 @@ public class ProductDAO {
     }
 
     public boolean updateProduct(Product product) {
-        String sql = "UPDATE products SET name = ?, description = ?, price = ?, stock = ?, category_id = ?, brand = ?, image = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE products SET name = ?, description = ?, price = ?, stock = ?, category_id = ?, brand = ?, image = ?, status = ? WHERE product_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -176,7 +176,7 @@ public class ProductDAO {
             ps.setString(6, product.getBrand());
             ps.setString(7, product.getImage());
             ps.setString(8, product.getStatus());
-            ps.setInt(9, product.getId());
+            ps.setInt(9, product.getProductId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error updating product: " + e.getMessage());
@@ -187,7 +187,7 @@ public class ProductDAO {
     }
 
     public boolean updateStock(int productId, int newStock) {
-        String sql = "UPDATE products SET stock = ? WHERE id = ?";
+        String sql = "UPDATE products SET stock = ? WHERE product_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -199,13 +199,13 @@ public class ProductDAO {
         } catch (SQLException e) {
             System.err.println("Error updating stock: " + e.getMessage());
         } finally {
-            DBUtil.close(null, ps, conn);
+            DBUtil.closeAll(null, ps, conn);
         }
         return false;
     }
 
     public boolean deleteProduct(int id) {
-        String sql = "DELETE FROM products WHERE id = ?";
+        String sql = "DELETE FROM products WHERE product_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -216,7 +216,7 @@ public class ProductDAO {
         } catch (SQLException e) {
             System.err.println("Error deleting product: " + e.getMessage());
         } finally {
-            DBUtil.close(null, ps, conn);
+            DBUtil.closeAll(null, ps, conn);
         }
         return false;
     }
@@ -260,7 +260,7 @@ public class ProductDAO {
 
     private Product mapResultSetToProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
-        product.setId(rs.getInt("id"));
+        product.setProductId(rs.getInt("product_id"));
         product.setName(rs.getString("name"));
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getBigDecimal("price"));

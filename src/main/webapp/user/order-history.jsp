@@ -31,14 +31,14 @@
                         <div class="card mb-2">
                             <div class="card-header flex-between">
                                 <div>
-                                    <strong>Order #${order.id}</strong>
+                                    <strong>Order #${order.orderId}</strong>
                                     <span class="text-muted"> - ${order.orderDate}</span>
                                 </div>
                                 <span class="badge badge-${order.status == 'pending' ? 'warning' : order.status == 'delivered' ? 'success' : order.status == 'cancelled' ? 'danger' : 'info'}">${order.status}</span>
                             </div>
                             <div class="card-body flex-between">
                                 <span>Total: <strong>$<fmt:formatNumber value="${order.totalAmount}" pattern="0.00"/></strong></span>
-                                <a href="${pageContext.request.contextPath}/orders?action=detail&id=${order.id}" class="btn btn-sm btn-outline">View Details</a>
+                                <a href="${pageContext.request.contextPath}/orders?action=detail&id=${order.orderId}" class="btn btn-sm btn-outline">View Details</a>
                             </div>
                         </div>
                     </c:forEach>

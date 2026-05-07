@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * Product model representing a mobile accessory product.
  */
 public class Product {
-    private int id;
+    private int productId;
     private String name;
     private String description;
     private BigDecimal price;
@@ -33,8 +33,8 @@ public class Product {
         this.status = "active";
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getProductId() { return productId; }
+    public void setProductId(int productId) { this.productId = productId; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -73,6 +73,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{id=" + id + ", name='" + name + "', price=" + price + ", stock=" + stock + ", brand='" + brand + "'}";
+        return "Product{productId=" + productId + ", name='" + name + "', price=" + price + ", stock=" + stock + ", brand='" + brand + "'}";
     }
 }

@@ -37,7 +37,7 @@ public class ContactService {
         Contact contact = new Contact(name, email, subject, message);
         int id = contactDAO.createContact(contact);
         if (id > 0) {
-            contact.setId(id);
+            contact.setContactId(id);
             return contact;
         }
         errorMsg.append("Failed to submit contact form. Please try again.");
@@ -48,11 +48,4 @@ public class ContactService {
         return contactDAO.getAllContacts();
     }
 
-    public boolean markAsRead(int contactId) {
-        return contactDAO.updateContactStatus(contactId, "read");
-    }
-
-    public boolean markAsReplied(int contactId) {
-        return contactDAO.updateContactStatus(contactId, "replied");
-    }
 }

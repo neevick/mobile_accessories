@@ -6,7 +6,7 @@ import java.sql.Timestamp;
  * Review model representing a product review by a user.
  */
 public class Review {
-    private int id;
+    private int reviewId;
     private int userId;
     private int productId;
     private int rating;
@@ -24,8 +24,8 @@ public class Review {
         this.comment = comment;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getReviewId() { return reviewId; }
+    public void setReviewId(int reviewId) { this.reviewId = reviewId; }
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
@@ -47,6 +47,6 @@ public class Review {
 
     @Override
     public String toString() {
-        return "Review{id=" + id + ", userId=" + userId + ", productId=" + productId + ", rating=" + rating + "}";
+        return "Review{reviewId=" + reviewId + ", userId=" + userId + ", productId=" + productId + ", rating=" + rating + "}";
     }
 }

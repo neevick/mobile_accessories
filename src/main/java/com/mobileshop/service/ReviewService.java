@@ -29,7 +29,7 @@ public class ReviewService {
         Review review = new Review(userId, productId, rating, comment);
         int id = reviewDAO.createReview(review);
         if (id > 0) {
-            review.setId(id);
+            review.setReviewId(id);
             return review;
         }
         errorMsg.append("Failed to submit review.");

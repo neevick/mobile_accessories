@@ -13,7 +13,7 @@ import java.util.List;
 public class ContactDAO {
 
     public int createContact(Contact contact) {
-        String sql = "INSERT INTO contacts (name, email, subject, message, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO contacts (name, email, subject, message) VALUES (?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -24,7 +24,6 @@ public class ContactDAO {
             ps.setString(2, contact.getEmail());
             ps.setString(3, contact.getSubject());
             ps.setString(4, contact.getMessage());
-            ps.setString(5, contact.getStatus());
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
                 rs = ps.getGeneratedKeys();
@@ -57,32 +56,13 @@ public class ContactDAO {
         return contacts;
     }
 
-    public boolean updateContactStatus(int contactId, String status) {
-        String sql = "UPDATE contacts SET status = ? WHERE id = ?";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = DBUtil.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, status);
-            ps.setInt(2, contactId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error updating contact status: " + e.getMessage());
-        } finally {
-            DBUtil.close(null, ps, conn);
-        }
-        return false;
-    }
-
     private Contact mapResultSetToContact(ResultSet rs) throws SQLException {
         Contact contact = new Contact();
-        contact.setId(rs.getInt("id"));
+        contact.setContactId(rs.getInt("contact_id"));
         contact.setName(rs.getString("name"));
         contact.setEmail(rs.getString("email"));
         contact.setSubject(rs.getString("subject"));
         contact.setMessage(rs.getString("message"));
-        contact.setStatus(rs.getString("status"));
         contact.setCreatedAt(rs.getTimestamp("created_at"));
         return contact;
     }

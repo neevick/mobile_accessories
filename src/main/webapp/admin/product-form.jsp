@@ -35,6 +35,8 @@
                     <li><a href="${pageContext.request.contextPath}/admin/categories">&#128193; Categories</a></li>
                     <li><a href="${pageContext.request.contextPath}/admin/orders">&#128196; Orders</a></li>
                     <li><a href="${pageContext.request.contextPath}/admin/users">&#128101; Users</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/reports">&#128202; Reports</a></li>
+                   
                 </ul>
             </aside>
 
@@ -54,7 +56,7 @@
                             <input type="hidden" name="action" value="${empty product ? 'add' : 'edit'}">
 
                             <c:if test="${not empty product}">
-                                <input type="hidden" name="id" value="${product.id}">
+                                <input type="hidden" name="id" value="${product.productId}">
                             </c:if>
 
                             <div class="form-group">
@@ -85,7 +87,7 @@
                                     <select name="categoryId" class="form-control" required>
                                         <option value="">-- Select Category --</option>
                                         <c:forEach var="cat" items="${categories}">
-                                            <option value="${cat.id}" <c:if test="${not empty product && product.categoryId == cat.id}">selected</c:if>>
+                                            <option value="${cat.categoryId}" <c:if test="${not empty product && product.categoryId == cat.categoryId}">selected</c:if>>
                                                 ${cat.name}
                                             </option>
                                         </c:forEach>
@@ -100,13 +102,8 @@
 
                             <div class="form-group">
                                 <label class="form-label">Product Image</label>
-                                <c:if test="${not empty product.image}">
-                                    <div class="mb-1">
-                                        <img src="${pageContext.request.contextPath}/resources/images/${product.image}" alt="Current" style="max-height:120px;border-radius:var(--radius-md)">
-                                    </div>
-                                </c:if>
                                 <input type="file" name="image" class="form-control" accept="image/*">
-                                <small class="text-muted">Upload new image to replace current</small>
+                                <small class="text-muted">Upload product image</small>
                             </div>
 
                             <c:if test="${not empty product}">

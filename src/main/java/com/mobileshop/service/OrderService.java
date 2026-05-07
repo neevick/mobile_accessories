@@ -7,6 +7,7 @@ import com.mobileshop.util.ValidationUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service layer for Order operations.
@@ -78,5 +79,21 @@ public class OrderService {
 
     public BigDecimal getTotalRevenue() {
         return orderDAO.getTotalRevenue();
+    }
+
+    public int countSales() {
+        return orderDAO.countSales();
+    }
+
+    public Map<String, BigDecimal> getMonthlyRevenue(int limitMonths) {
+        return orderDAO.getMonthlyRevenue(limitMonths);
+    }
+
+    public Map<String, Integer> getTopSellingProducts(int limit) {
+        return orderDAO.getTopSellingProducts(limit);
+    }
+
+    public Map<String, Integer> getTopOrderItems(int limit) {
+        return orderDAO.getTopOrderItems(limit);
     }
 }

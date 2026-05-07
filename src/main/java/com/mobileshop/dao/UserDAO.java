@@ -20,7 +20,7 @@ public class UserDAO {
      * @return the generated user ID, or -1 on failure
      */
     public int createUser(User user) {
-        String sql = "INSERT INTO users (username, email, password, full_name, phone, address, role, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, email, password, full_name, phone, address, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -34,7 +34,6 @@ public class UserDAO {
             ps.setString(5, user.getPhone());
             ps.setString(6, user.getAddress());
             ps.setString(7, user.getRole());
-            ps.setString(8, user.getStatus());
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
                 rs = ps.getGeneratedKeys();
@@ -55,7 +54,7 @@ public class UserDAO {
      * @return User object if authenticated, null otherwise
      */
     public User authenticateUser(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username = ? AND status = 'active'";
+        String sql = "SELECT * FROM users WHERE username = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -82,7 +81,7 @@ public class UserDAO {
      * Gets a user by ID.
      */
     public User getUserById(int id) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+        String sql = "SELECT * FROM users WHERE user_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -212,32 +211,10 @@ public class UserDAO {
     }
 
     /**
-     * Gets pending users (awaiting admin approval).
-     */
-    public List<User> getPendingUsers() {
-        List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users WHERE status = 'pending' ORDER BY created_at DESC";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = DBUtil.getConnection();
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) users.add(mapResultSetToUser(rs));
-        } catch (SQLException e) {
-            System.err.println("Error getting pending users: " + e.getMessage());
-        } finally {
-            DBUtil.closeAll(rs, ps, conn);
-        }
-        return users;
-    }
-
-    /**
      * Updates a user's profile information.
      */
     public boolean updateUser(User user) {
-        String sql = "UPDATE users SET email = ?, full_name = ?, phone = ?, address = ? WHERE id = ?";
+        String sql = "UPDATE users SET email = ?, full_name = ?, phone = ?, address = ?, role = ? WHERE user_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -247,7 +224,8 @@ public class UserDAO {
             ps.setString(2, user.getFullName());
             ps.setString(3, user.getPhone());
             ps.setString(4, user.getAddress());
-            ps.setInt(5, user.getId());
+            ps.setString(5, user.getRole());
+            ps.setInt(6, user.getUserId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error updating user: " + e.getMessage());
@@ -261,7 +239,7 @@ public class UserDAO {
      * Updates a user's password.
      */
     public boolean updatePassword(int userId, String newPassword) {
-        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        String sql = "UPDATE users SET password = ? WHERE user_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -279,31 +257,10 @@ public class UserDAO {
     }
 
     /**
-     * Updates a user's status (approve/reject).
-     */
-    public boolean updateUserStatus(int userId, String status) {
-        String sql = "UPDATE users SET status = ? WHERE id = ?";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = DBUtil.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, status);
-            ps.setInt(2, userId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error updating user status: " + e.getMessage());
-        } finally {
-            DBUtil.closeAll(null, ps, conn);
-        }
-        return false;
-    }
-
-    /**
      * Deletes a user by ID.
      */
     public boolean deleteUser(int id) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM users WHERE user_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
@@ -345,7 +302,7 @@ public class UserDAO {
      */
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
-        user.setId(rs.getInt("id"));
+        user.setUserId(rs.getInt("user_id"));
         user.setUsername(rs.getString("username"));
         user.setEmail(rs.getString("email"));
         user.setPassword(rs.getString("password"));
@@ -353,7 +310,6 @@ public class UserDAO {
         user.setPhone(rs.getString("phone"));
         user.setAddress(rs.getString("address"));
         user.setRole(rs.getString("role"));
-        user.setStatus(rs.getString("status"));
         user.setCreatedAt(rs.getTimestamp("created_at"));
         user.setUpdatedAt(rs.getTimestamp("updated_at"));
         return user;

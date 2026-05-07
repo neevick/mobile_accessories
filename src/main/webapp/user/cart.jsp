@@ -16,7 +16,6 @@
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li><a href="${pageContext.request.contextPath}/orders?action=cart" class="active">Cart</a></li>
-                <li><a href="${pageContext.request.contextPath}/wishlist?action=list">Wishlist</a></li>
                 <li><a href="${pageContext.request.contextPath}/profile">${sessionScope.userName}</a></li>
                 <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
             </ul>

@@ -19,7 +19,6 @@
                 <li><a href="${pageContext.request.contextPath}/products" class="active">Products</a></li>
                 <c:if test="${not empty sessionScope.user}">
                     <li><a href="${pageContext.request.contextPath}/orders?action=cart">Cart</a></li>
-                    <li><a href="${pageContext.request.contextPath}/wishlist?action=list">Wishlist</a></li>
                     <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
                 </c:if>
             </ul>
@@ -42,18 +41,7 @@
                                 <c:otherwise>&#128241;</c:otherwise>
                             </c:choose>
                         </div>
-                        <div class="card-body text-center">
-                            <c:if test="${not empty sessionScope.user}">
-                                <c:choose>
-                                    <c:when test="${inWishlist}">
-                                        <a href="${pageContext.request.contextPath}/wishlist?action=remove&productId=${product.id}" class="btn btn-warning btn-block">&#10084; In Wishlist</a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="${pageContext.request.contextPath}/wishlist?action=add&productId=${product.id}" class="btn btn-outline btn-block">&#9825; Add to Wishlist</a>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:if>
-                        </div>
+                        <div class="card-body text-center"></div>
                     </div>
                 </div>
 
@@ -86,7 +74,7 @@
                     <c:if test="${product.stock > 0 && not empty sessionScope.user}">
                         <form action="${pageContext.request.contextPath}/orders" method="get" class="d-flex gap-1 mb-2">
                             <input type="hidden" name="action" value="addToCart">
-                            <input type="hidden" name="productId" value="${product.id}">
+                            <input type="hidden" name="productId" value="${product.productId}">
                             <div class="qty-input">
                                 <button type="button" onclick="changeQty(-1)">-</button>
                                 <input type="number" name="quantity" id="qty" value="1" min="1" max="${product.stock}">
@@ -111,7 +99,7 @@
                     <c:if test="${not empty sessionScope.user}">
                         <form action="${pageContext.request.contextPath}/products" method="post" class="mb-3">
                             <input type="hidden" name="action" value="review">
-                            <input type="hidden" name="productId" value="${product.id}">
+                            <input type="hidden" name="productId" value="${product.productId}">
                             <div class="form-group">
                                 <label class="form-label">Rating</label>
                                 <select name="rating" class="form-control" style="max-width:150px">

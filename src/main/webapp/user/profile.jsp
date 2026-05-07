@@ -15,7 +15,6 @@
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li><a href="${pageContext.request.contextPath}/orders?action=cart">Cart</a></li>
-                <li><a href="${pageContext.request.contextPath}/wishlist?action=list">Wishlist</a></li>
                 <li><a href="${pageContext.request.contextPath}/profile" class="active">${sessionScope.userName}</a></li>
                 <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
             </ul>
@@ -45,7 +44,6 @@
                             <p><strong>Phone:</strong> ${profileUser.phone}</p>
                             <p><strong>Address:</strong> ${profileUser.address}</p>
                             <p><strong>Role:</strong> <span class="badge badge-info">${profileUser.role}</span></p>
-                            <p><strong>Status:</strong> <span class="badge badge-success">${profileUser.status}</span></p>
                             <p><strong>Member Since:</strong> ${profileUser.createdAt}</p>
                         </div>
                     </div>
@@ -55,7 +53,6 @@
                         <div class="card-header"><h3>Quick Links</h3></div>
                         <div class="card-body">
                             <a href="${pageContext.request.contextPath}/orders?action=history" class="btn btn-outline btn-block mb-1">My Orders</a>
-                            <a href="${pageContext.request.contextPath}/wishlist?action=list" class="btn btn-outline btn-block mb-1">My Wishlist</a>
                             <a href="${pageContext.request.contextPath}/profile?action=changePassword" class="btn btn-outline btn-block">Change Password</a>
                         </div>
                     </div>

@@ -12,7 +12,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand"><span class="brand-icon">&#9881;</span> Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand"><span class="brand-icon"></span> Mobile Accessories</a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
                 <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
@@ -27,11 +27,14 @@
                 <aside class="admin-sidebar">
                     <div class="sidebar-header">Admin Panel</div>
                     <ul class="sidebar-nav">
-                        <li><a href="${pageContext.request.contextPath}/admin/dashboard">&#128202; Dashboard</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/products" class="active">&#128230; Products</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/categories">&#128193; Categories</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/orders">&#128196; Orders</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/users">&#128101; Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/reports">Reports</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/analyticss">Analytics</a></li>
+                        
                     </ul>
                 </aside>
 
@@ -71,7 +74,7 @@
                                             <tbody>
                                                 <c:forEach var="product" items="${products}">
                                                     <tr>
-                                                        <td>${product.id}</td>
+                                                        <td>${product.productId}</td>
                                                         <td>${product.name}</td>
                                                         <td>${product.categoryName}</td>
                                                         <td>${product.brand}</td>
@@ -79,8 +82,8 @@
                                                         <td>${product.stock}</td>
                                                         <td><span class="badge badge-${product.status == 'active' ? 'success' : 'danger'}">${product.status}</span></td>
                                                         <td>
-                                                            <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${product.id}" class="btn btn-sm btn-primary">Edit</a>
-                                                            <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=${product.id}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
+                                                            <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${product.productId}" class="btn btn-sm btn-primary">Edit</a>
+                                                            <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=${product.productId}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

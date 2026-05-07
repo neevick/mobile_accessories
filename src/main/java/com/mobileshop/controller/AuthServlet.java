@@ -80,7 +80,7 @@ public class AuthServlet extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
-            session.setAttribute("userId", user.getId());
+            session.setAttribute("userId", user.getUserId());
             session.setAttribute("userRole", user.getRole());
             session.setAttribute("userName", user.getFullName());
 
@@ -127,7 +127,7 @@ public class AuthServlet extends HttpServlet {
         User user = userService.registerUser(username, email, password, fullName, phone, address, errorMsg);
 
         if (user != null) {
-            request.setAttribute("success", "Registration successful! Your account is pending admin approval. Please wait for approval before logging in.");
+            request.setAttribute("success", "Registration successful! Please login.");
             request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
         } else {
             request.setAttribute("error", errorMsg.toString());

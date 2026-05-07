@@ -93,6 +93,26 @@
         <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
 
+    <!-- Admin Reports Servlet -->
+    <servlet>
+        <servlet-name>AdminReportServlet</servlet-name>
+        <servlet-class>com.mobileshop.controller.AdminReportServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminReportServlet</servlet-name>
+        <url-pattern>/admin/reports</url-pattern>
+    </servlet-mapping>
+
+    <!-- Admin Analytics Servlet -->
+    <servlet>
+        <servlet-name>AdminAnalyticsServlet</servlet-name>
+        <servlet-class>com.mobileshop.controller.AdminAnalyticsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminAnalyticsServlet</servlet-name>
+        <url-pattern>/admin/analytics</url-pattern>
+    </servlet-mapping>
+
     <!-- Product Servlet (User side) -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
@@ -111,16 +131,6 @@
     <servlet-mapping>
         <servlet-name>OrderServlet</servlet-name>
         <url-pattern>/orders</url-pattern>
-    </servlet-mapping>
-
-    <!-- Wishlist Servlet -->
-    <servlet>
-        <servlet-name>WishlistServlet</servlet-name>
-        <servlet-class>com.mobileshop.controller.WishlistServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>WishlistServlet</servlet-name>
-        <url-pattern>/wishlist</url-pattern>
     </servlet-mapping>
 
     <!-- Contact Servlet -->

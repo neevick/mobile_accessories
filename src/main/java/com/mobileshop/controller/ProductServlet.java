@@ -61,7 +61,11 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void showDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        Integer id = parseInt(request.getParameter("id"));
+        if (id == null) {
+            response.sendRedirect(request.getContextPath() + "/products");
+            return;
+        }
         Product product = productService.getProductById(id);
         if (product == null) {
             response.sendRedirect(request.getContextPath() + "/products");
@@ -70,18 +74,9 @@ public class ProductServlet extends HttpServlet {
         List<Review> reviews = reviewService.getReviewsByProductId(id);
         double avgRating = reviewService.getAverageRating(id);
 
-        // Check if product is in wishlist
-        HttpSession session = request.getSession(false);
-        boolean inWishlist = false;
-        if (session != null && session.getAttribute("userId") != null) {
-            com.mobileshop.service.WishlistService wishlistService = new com.mobileshop.service.WishlistService();
-            inWishlist = wishlistService.isInWishlist((int) session.getAttribute("userId"), id);
-        }
-
         request.setAttribute("product", product);
         request.setAttribute("reviews", reviews);
         request.setAttribute("avgRating", avgRating);
-        request.setAttribute("inWishlist", inWishlist);
         request.getRequestDispatcher("/user/product-detail.jsp").forward(request, response);
     }
 
@@ -96,7 +91,11 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void listByCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int categoryId = Integer.parseInt(request.getParameter("id"));
+        Integer categoryId = parseInt(request.getParameter("id"));
+        if (categoryId == null) {
+            response.sendRedirect(request.getContextPath() + "/products");
+            return;
+        }
         List<Product> products = productService.getProductsByCategory(categoryId);
         List<Category> categories = productService.getActiveCategories();
         Category currentCategory = productService.getCategoryById(categoryId);
@@ -127,5 +126,13 @@ public class ProductServlet extends HttpServlet {
             request.getSession().setAttribute("error", errorMsg.toString());
         }
         response.sendRedirect(request.getContextPath() + "/products?action=detail&id=" + productId);
+    }
+
+    private Integer parseInt(String value) {
+        try {
+            return value == null ? null : Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
