@@ -89,6 +89,22 @@ public class OrderService {
         return orderDAO.getMonthlyRevenue(limitMonths);
     }
 
+    public Map<String, BigDecimal> getRevenueByPeriod(String period, int limit) {
+        return orderDAO.getRevenueByPeriod(period, limit);
+    }
+
+    public Map<String, Integer> getOrderCountByPeriod(String period, int limit) {
+        return orderDAO.getOrderCountByPeriod(period, limit);
+    }
+
+    public Map<String, Integer> getLatestDailyOrderCounts(int days) {
+        return orderDAO.getLatestDailyOrderCounts(days);
+    }
+
+    public Map<String, BigDecimal> getLatestDailyRevenue(int days) {
+        return orderDAO.getLatestDailyRevenue(days);
+    }
+
     public Map<String, Integer> getTopSellingProducts(int limit) {
         return orderDAO.getTopSellingProducts(limit);
     }

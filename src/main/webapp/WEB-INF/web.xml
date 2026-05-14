@@ -103,16 +103,6 @@
         <url-pattern>/admin/reports</url-pattern>
     </servlet-mapping>
 
-    <!-- Admin Analytics Servlet -->
-    <servlet>
-        <servlet-name>AdminAnalyticsServlet</servlet-name>
-        <servlet-class>com.mobileshop.controller.AdminAnalyticsServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AdminAnalyticsServlet</servlet-name>
-        <url-pattern>/admin/analytics</url-pattern>
-    </servlet-mapping>
-
     <!-- Product Servlet (User side) -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>

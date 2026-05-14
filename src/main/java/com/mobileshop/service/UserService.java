@@ -124,4 +124,8 @@ public class UserService {
     public int countUsers() {
         return userDAO.countUsers();
     }
+
+    public int countUsersByRole(String role) {
+        return userDAO.countUsersByRole(role);
+    }
 }

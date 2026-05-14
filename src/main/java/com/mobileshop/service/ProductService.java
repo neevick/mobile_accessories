@@ -159,4 +159,8 @@ public class ProductService {
     public int countProducts() {
         return productDAO.countProducts();
     }
+
+    public int countProductsByStatus(String status) {
+        return productDAO.countProductsByStatus(status);
+    }
 }

@@ -291,6 +291,125 @@ public class OrderDAO {
         return out;
     }
 
+    public Map<String, java.math.BigDecimal> getRevenueByPeriod(String period, int limit) {
+        Map<String, java.math.BigDecimal> out = new LinkedHashMap<>();
+        boolean weekly = "weekly".equalsIgnoreCase(period);
+        String labelExpression = weekly ? "DATE_FORMAT(order_date, '%x-W%v')" : "DATE_FORMAT(order_date, '%Y-%m')";
+        String sql =
+                "SELECT " + labelExpression + " AS period_label, COALESCE(SUM(total_amount),0) AS revenue " +
+                "FROM orders " +
+                "WHERE status IN ('confirmed','shipped','delivered') " +
+                "GROUP BY period_label " +
+                "ORDER BY period_label DESC " +
+                "LIMIT ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, Math.max(1, limit));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                out.put(rs.getString("period_label"), rs.getBigDecimal("revenue"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting revenue by period: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return out;
+    }
+
+    public Map<String, Integer> getOrderCountByPeriod(String period, int limit) {
+        Map<String, Integer> out = new LinkedHashMap<>();
+        boolean weekly = "weekly".equalsIgnoreCase(period);
+        String labelExpression = weekly ? "DATE_FORMAT(order_date, '%x-W%v')" : "DATE_FORMAT(order_date, '%Y-%m')";
+        String sql =
+                "SELECT " + labelExpression + " AS period_label, COUNT(*) AS order_count " +
+                "FROM orders " +
+                "WHERE status IN ('confirmed','shipped','delivered') " +
+                "GROUP BY period_label " +
+                "ORDER BY period_label DESC " +
+                "LIMIT ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, Math.max(1, limit));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                out.put(rs.getString("period_label"), rs.getInt("order_count"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting orders by period: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return out;
+    }
+
+    public Map<String, Integer> getLatestDailyOrderCounts(int days) {
+        Map<String, Integer> out = new LinkedHashMap<>();
+        String sql =
+                "SELECT DATE(order_date) AS order_day, COUNT(*) AS order_count " +
+                "FROM orders " +
+                "WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY) " +
+                "GROUP BY DATE(order_date) " +
+                "ORDER BY order_day DESC";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, Math.max(0, days - 1));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                out.put(rs.getString("order_day"), rs.getInt("order_count"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting latest daily order counts: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return out;
+    }
+
+    public Map<String, java.math.BigDecimal> getLatestDailyRevenue(int days) {
+        Map<String, java.math.BigDecimal> out = new LinkedHashMap<>();
+        String sql =
+                "SELECT DATE(order_date) AS order_day, COALESCE(SUM(total_amount),0) AS revenue " +
+                "FROM orders " +
+                "WHERE status IN ('confirmed','shipped','delivered') " +
+                "AND order_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY) " +
+                "GROUP BY DATE(order_date) " +
+                "ORDER BY order_day DESC";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, Math.max(0, days - 1));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                out.put(rs.getString("order_day"), rs.getBigDecimal("revenue"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting latest daily revenue: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return out;
+    }
+
     /**
      * Top-selling products by quantity, limited.
      */

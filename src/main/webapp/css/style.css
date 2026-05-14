@@ -1,5 +1,5 @@
 /* ============================================
-   GadgetZone - Mobile Accessories Online Shop
+   Mobile Accessories Online Shop
    Main Stylesheet
    ============================================ */
 
@@ -465,7 +465,7 @@ tr:hover { background: var(--primary-light); }
 .star-rating .star { color: #d1d5db; }
 .star-rating .star.filled { color: var(--accent); }
 
-/* ---- Cart/Wishlist Item ---- */
+/* ---- Cart Item ---- */
 .cart-item {
     display: flex;
     align-items: center;

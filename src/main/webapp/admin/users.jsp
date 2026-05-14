@@ -13,7 +13,7 @@
 <nav class="navbar">
     <div class="container">
         <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-            <span class="brand-icon"></span> Mobile Accessories
+            <span class="brand-icon">&#9881;</span> Mobile Accessories
         </a>
         <ul class="navbar-nav">
             <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
@@ -36,8 +36,6 @@
                     <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
                     <li><a href="${pageContext.request.contextPath}/admin/users" class="active">Users</a></li>
                     <li><a href="${pageContext.request.contextPath}/admin/reports">Reports</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/analytics">Analytics</a></li>
-                    
                 </ul>
             </aside>
 

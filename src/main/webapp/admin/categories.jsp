@@ -31,8 +31,7 @@
                         <li><a href="${pageContext.request.contextPath}/admin/categories" class="active">Categories</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/reports">Reports</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/analytics">Analytics</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/reports">Reports & Analytics</a></li>
                         
                     </ul>
                 </aside>
@@ -94,7 +93,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 GadgetZone Admin.</p></div>
+        <div class="container"><p>&copy; 2026 Mobile Accessories Admin.</p></div>
     </footer>
 </body>
 </html>

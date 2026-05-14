@@ -297,6 +297,25 @@ public class UserDAO {
         return 0;
     }
 
+    public int countUsersByRole(String role) {
+        String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, role);
+            rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error counting users by role: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return 0;
+    }
+
     /**
      * Maps a ResultSet row to a User object.
      */

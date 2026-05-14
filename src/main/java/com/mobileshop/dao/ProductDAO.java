@@ -239,6 +239,25 @@ public class ProductDAO {
         return 0;
     }
 
+    public int countProductsByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM products WHERE status = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, status);
+            rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error counting products by status: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return 0;
+    }
+
     public int countProductsByCategory(int categoryId) {
         String sql = "SELECT COUNT(*) FROM products WHERE category_id = ? AND status = 'active'";
         Connection conn = null;
