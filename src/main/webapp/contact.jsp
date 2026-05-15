@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Mobile Accessories</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand"><span class="brand-icon">&#9881;</span> Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
             <button class="navbar-toggle" onclick="toggleNav()">&#9776;</button>
             <ul class="navbar-nav" id="navbarNav">
                 <li><a href="${pageContext.request.contextPath}/">Home</a></li>
@@ -21,7 +21,7 @@
                 <c:choose>
                     <c:when test="${not empty sessionScope.user}">
                         <li><a href="${pageContext.request.contextPath}/profile" class="nav-user">&#128100; ${sessionScope.userName}</a></li>
-                        <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
+                        <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
                     </c:when>
                     <c:otherwise>
                         <li><a href="${pageContext.request.contextPath}/auth?action=login">Login</a></li>
@@ -93,5 +93,6 @@
     </footer>
 
     <script>function toggleNav(){document.getElementById('navbarNav').classList.toggle('show');}</script>
+    <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>

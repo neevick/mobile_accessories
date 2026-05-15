@@ -6,13 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Mobile Accessories</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
             <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-                <span class="brand-icon">&#9881;</span> Mobile Accessories
+                Mobile Accessories
             </a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/">Home</a></li>

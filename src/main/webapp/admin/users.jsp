@@ -6,19 +6,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Users - Mobile Accessories Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
 
 <nav class="navbar">
     <div class="container">
         <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-            <span class="brand-icon">&#9881;</span> Mobile Accessories
+            Mobile Accessories
         </a>
         <ul class="navbar-nav">
             <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/users" class="active">Users</a></li>
-            <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
+            <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
         </ul>
     </div>
 </nav>
@@ -35,7 +35,7 @@
                     <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
                     <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
                     <li><a href="${pageContext.request.contextPath}/admin/users" class="active">Users</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/reports">Reports</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/reports">Reports & Analytics</a></li>
                 </ul>
             </aside>
 
@@ -130,5 +130,6 @@
     </div>
 </footer>
 
+    <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>

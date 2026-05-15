@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Mobile Accessories</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -16,13 +16,13 @@
     <nav class="navbar">
         <div class="container">
             <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-                <span class="brand-icon">&#9881;</span> Mobile Accessories
+                Mobile Accessories
             </a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/">Home</a></li>
                 <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
+                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -39,7 +39,7 @@
                         <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/reports">Reports</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/reports">Reports & Analytics</a></li>
                     </ul>
                 </aside>
 
@@ -367,5 +367,6 @@
             }
         });
     </script>
+    <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>

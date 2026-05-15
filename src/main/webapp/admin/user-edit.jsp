@@ -6,19 +6,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Edit User - Mobile Accessories Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
 
 <nav class="navbar">
     <div class="container">
         <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-            <span class="brand-icon">&#9881;</span> Mobile Accessories
+            Mobile Accessories
         </a>
         <ul class="navbar-nav">
             <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
             <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
-            <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
+            <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
         </ul>
     </div>
 </nav>
@@ -30,12 +30,12 @@
             <aside class="admin-sidebar">
                 <div class="sidebar-header">Admin Panel</div>
                 <ul class="sidebar-nav">
-                    <li><a href="${pageContext.request.contextPath}/admin/dashboard">&#128202; Dashboard</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/products" class="active">&#128230; Products</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/categories">&#128193; Categories</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/orders">&#128196; Orders</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/users">&#128101; Users</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/reports">&#128202; Reports</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin/reports">Reports & Analytics</a></li>
                 </ul>
             </aside>
             
@@ -72,7 +72,10 @@
 			        </select>
 			    </div>
 			
-			    <button type="submit" class="btn btn-primary">Update User</button>
+			    <div class="d-flex gap-1">
+			        <button type="submit" class="btn btn-primary">Update User</button>
+			        <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-secondary">Cancel</a>
+			    </div>
 			</form>
 
         </div>
@@ -85,5 +88,6 @@
     </div>
 </footer>
 
+    <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>

@@ -7,17 +7,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports & Analytics - Mobile Accessories Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand"><span class="brand-icon"></span> Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
                 <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
-                <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
+                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -274,5 +274,6 @@
             }
         });
     </script>
+    <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>

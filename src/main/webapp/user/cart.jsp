@@ -7,17 +7,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - Mobile Accessories</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand"><span class="brand-icon">&#9881;</span>Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li><a href="${pageContext.request.contextPath}/orders?action=cart" class="active">Cart</a></li>
                 <li><a href="${pageContext.request.contextPath}/profile">${sessionScope.userName}</a></li>
-                <li><a href="${pageContext.request.contextPath}/auth?action=logout">Logout</a></li>
+                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -84,5 +84,6 @@
     <footer class="footer">
         <div class="container"><p>&copy; 2026 Mobile Accessories.</p></div>
     </footer>
+    <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>
