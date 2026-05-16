@@ -77,6 +77,14 @@ public class OrderService {
         return orderDAO.countOrdersByStatus(status);
     }
 
+    public int countOrdersToday() {
+        return orderDAO.countOrdersToday();
+    }
+
+    public int countOrdersThisWeek() {
+        return orderDAO.countOrdersThisWeek();
+    }
+
     public BigDecimal getTotalRevenue() {
         return orderDAO.getTotalRevenue();
     }

@@ -36,6 +36,8 @@ public class AdminReportServlet extends HttpServlet {
         int customerUsers = userService.countUsersByRole("user");
         BigDecimal totalRevenue = orderService.getTotalRevenue();
         int totalOrders = orderService.countOrders();
+        int todayOrders = orderService.countOrdersToday();
+        int thisWeekOrders = orderService.countOrdersThisWeek();
         int totalSales = orderService.countSales();
         int pendingOrders = orderService.countOrdersByStatus("pending");
         int confirmedOrders = orderService.countOrdersByStatus("confirmed");
@@ -58,6 +60,8 @@ public class AdminReportServlet extends HttpServlet {
         request.setAttribute("customerUsers", customerUsers);
         request.setAttribute("totalRevenue", totalRevenue);
         request.setAttribute("totalOrders", totalOrders);
+        request.setAttribute("todayOrders", todayOrders);
+        request.setAttribute("thisWeekOrders", thisWeekOrders);
         request.setAttribute("totalSales", totalSales);
         request.setAttribute("pendingOrders", pendingOrders);
         request.setAttribute("confirmedOrders", confirmedOrders);
@@ -70,6 +74,10 @@ public class AdminReportServlet extends HttpServlet {
         request.setAttribute("latestDailyOrders", latestDailyOrders);
         request.setAttribute("topProducts", topProducts);
         request.setAttribute("topOrderItems", topOrderItems);
+        if ("true".equalsIgnoreCase(request.getParameter("generate"))) {
+            request.getRequestDispatcher("/admin/generated-report.jsp").forward(request, response);
+            return;
+        }
 
         request.getRequestDispatcher("/admin/reports.jsp").forward(request, response);
     }

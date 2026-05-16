@@ -219,6 +219,42 @@ public class OrderDAO {
         return 0;
     }
 
+    public int countOrdersToday() {
+        String sql = "SELECT COUNT(*) FROM orders WHERE DATE(order_date) = CURDATE()";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error counting today's orders: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return 0;
+    }
+
+    public int countOrdersThisWeek() {
+        String sql = "SELECT COUNT(*) FROM orders WHERE YEARWEEK(order_date, 1) = YEARWEEK(CURDATE(), 1)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error counting this week's orders: " + e.getMessage());
+        } finally {
+            DBUtil.closeAll(rs, ps, conn);
+        }
+        return 0;
+    }
+
     public java.math.BigDecimal getTotalRevenue() {
         String sql = "SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE status IN ('confirmed', 'shipped', 'delivered')";
         Connection conn = null;

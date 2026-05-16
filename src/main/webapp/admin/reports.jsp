@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports & Analytics - Mobile Accessories Admin</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=5">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -45,6 +45,7 @@
                                 <option value="monthly" ${period == 'monthly' ? 'selected' : ''}>Monthly</option>
                                 <option value="weekly" ${period == 'weekly' ? 'selected' : ''}>Weekly</option>
                             </select>
+                            <input type="hidden" name="generate" value="true">
                             <button type="submit" class="btn btn-primary">Generate Report</button>
                         </form>
                     </div>
@@ -53,30 +54,30 @@
                         <div class="stat-card">
                             <div class="stat-info">
                                 <div class="stat-value">Rs <fmt:formatNumber value="${totalRevenue}" pattern="0.00"/></div>
-                                <div class="stat-label">Total Sales</div>
+                                <div class="stat-label">Sale Revenue</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <div class="stat-value">${todayOrders}</div>
+                                <div class="stat-label">Today Orders</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <div class="stat-value">${thisWeekOrders}</div>
+                                <div class="stat-label">This Week Order</div>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-info">
                                 <div class="stat-value">${totalOrders}</div>
-                                <div class="stat-label">Number of Orders</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <div class="stat-value">${totalUsers}</div>
-                                <div class="stat-label">Number of Users</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <div class="stat-value">${totalProducts}</div>
-                                <div class="stat-label">Active Products</div>
+                                <div class="stat-label">Total Order</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="stats-grid">
+                    <div class="report-summary-grid">
                         <div class="card">
                             <div class="card-body">
                                 <h3>Product Report</h3>
@@ -103,21 +104,25 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card analytics-section">
                         <div class="card-body">
-                            <h3>Latest 7 Days Order Analysis</h3>
-                            <canvas id="weeklyAnalysisChart"></canvas>
+                            <h3>Weekly Order Analysis</h3>
+                            <div class="chart-area">
+                                <canvas id="weeklyAnalysisChart"></canvas>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card analytics-section">
                         <div class="card-body">
                             <h3>${period == 'weekly' ? 'Weekly' : 'Monthly'} Sales & Orders</h3>
-                            <canvas id="analyticsChart"></canvas>
+                            <div class="chart-area">
+                                <canvas id="analyticsChart"></canvas>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card analytics-section">
                         <div class="card-body">
                             <h3>Top Selling Products</h3>
                             <c:choose>
@@ -191,48 +196,98 @@
             </c:forEach>
         ].reverse();
 
+        const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const toWeekdayTotals = (dateLabels, values) => {
+            const totals = [0, 0, 0, 0, 0, 0, 0];
+            dateLabels.forEach((label, index) => {
+                const parsedDate = new Date(label + 'T00:00:00');
+                if (!Number.isNaN(parsedDate.getTime())) {
+                    totals[parsedDate.getDay()] += Number(values[index]) || 0;
+                }
+            });
+            return totals;
+        };
+        const weeklyOrderTotals = toWeekdayTotals(weeklyLabels, weeklyOrderData);
+        const weeklyRevenueTotals = toWeekdayTotals(weeklyLabels, weeklyRevenueData);
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            }
+        };
+
+        const orderAxisOptions = {
+            type: 'linear',
+            position: 'left',
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Orders'
+            },
+            ticks: {
+                precision: 0,
+                stepSize: 1
+            }
+        };
+
+        const revenueAxisOptions = {
+            type: 'linear',
+            position: 'right',
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Sale Revenue'
+            },
+            ticks: {
+                callback: (value) => 'Rs ' + value
+            },
+            grid: {
+                drawOnChartArea: false
+            }
+        };
+
         new Chart(document.getElementById('weeklyAnalysisChart'), {
             type: 'bar',
             data: {
-                labels: weeklyLabels,
+                labels: weekdayLabels,
                 datasets: [
                     {
-                        label: 'Orders Created',
-                        data: weeklyOrderData,
+                        label: 'Orders',
+                        data: weeklyOrderTotals,
                         backgroundColor: '#2563eb',
                         borderColor: '#1d4ed8',
                         borderWidth: 1,
+                        maxBarThickness: 36,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'orderAxis'
                     },
                     {
-                        label: 'Sales Revenue',
-                        data: weeklyRevenueData,
-                        type: 'line',
+                        label: 'Sale Revenue',
+                        data: weeklyRevenueTotals,
+                        backgroundColor: 'rgba(5, 150, 105, 0.72)',
                         borderColor: '#059669',
-                        backgroundColor: 'rgba(5, 150, 105, 0.14)',
-                        borderWidth: 2,
-                        tension: 0.25,
-                        fill: true,
+                        borderWidth: 1,
+                        maxBarThickness: 36,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'revenueAxis'
                     }
                 ]
             },
             options: {
-                responsive: true,
+                ...commonChartOptions,
                 scales: {
-                    orderAxis: {
-                        type: 'linear',
-                        position: 'left',
-                        beginAtZero: true
-                    },
-                    revenueAxis: {
-                        type: 'linear',
-                        position: 'right',
-                        beginAtZero: true,
-                        grid: {
-                            drawOnChartArea: false
-                        }
-                    }
+                    orderAxis: orderAxisOptions,
+                    revenueAxis: revenueAxisOptions
                 }
             }
         });
@@ -245,27 +300,35 @@
                     {
                         label: 'Revenue',
                         data: revenueData,
+                        maxBarThickness: 34,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'revenueAxis'
                     },
                     {
                         label: 'Orders',
                         data: orderData,
+                        maxBarThickness: 34,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'orderAxis'
                     }
                 ]
             },
             options: {
-                responsive: true,
+                ...commonChartOptions,
                 scales: {
                     revenueAxis: {
+                        ...revenueAxisOptions,
                         type: 'linear',
                         position: 'left',
-                        beginAtZero: true
+                        grid: {
+                            drawOnChartArea: true
+                        }
                     },
                     orderAxis: {
-                        type: 'linear',
+                        ...orderAxisOptions,
                         position: 'right',
-                        beginAtZero: true,
                         grid: {
                             drawOnChartArea: false
                         }
@@ -273,6 +336,7 @@
                 }
             }
         });
+
     </script>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>

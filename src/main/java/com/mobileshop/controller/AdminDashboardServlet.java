@@ -27,6 +27,8 @@ public class AdminDashboardServlet extends HttpServlet {
         int totalProducts = productService.countProducts();
         int inactiveProducts = productService.countProductsByStatus("inactive");
         int totalOrders = orderService.countOrders();
+        int todayOrders = orderService.countOrdersToday();
+        int thisWeekOrders = orderService.countOrdersThisWeek();
         int totalUsers = userService.countUsers();
         int totalSales = orderService.countSales();
         int pendingOrders = orderService.countOrdersByStatus("pending");
@@ -46,6 +48,8 @@ public class AdminDashboardServlet extends HttpServlet {
         request.setAttribute("totalProducts", totalProducts);
         request.setAttribute("inactiveProducts", inactiveProducts);
         request.setAttribute("totalOrders", totalOrders);
+        request.setAttribute("todayOrders", todayOrders);
+        request.setAttribute("thisWeekOrders", thisWeekOrders);
         request.setAttribute("totalUsers", totalUsers);
         request.setAttribute("totalSales", totalSales);
         request.setAttribute("pendingOrders", pendingOrders);

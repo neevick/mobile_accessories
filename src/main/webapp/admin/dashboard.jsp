@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Mobile Accessories</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=6">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -56,20 +56,35 @@
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-info">
-                                <div class="stat-value">${totalProducts}</div>
-                                <div class="stat-label">Total Products</div>
+                                <div class="stat-value">${todayOrders}</div>
+                                <div class="stat-label">Today Orders</div>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-info">
-                                <div class="stat-value">Rs <fmt:formatNumber value="${revenue}" pattern="0.00"/></div>
-                                <div class="stat-label">Total Revenue</div>
+                                <div class="stat-value">${thisWeekOrders}</div>
+                                <div class="stat-label">This Week Order</div>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-info">
                                 <div class="stat-value">${totalOrders}</div>
-                                <div class="stat-label">Total Orders</div>
+                                <div class="stat-label">Total Order</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <div class="stat-value">Rs <fmt:formatNumber value="${revenue}" pattern="0.00"/></div>
+                                <div class="stat-label">Sale Revenue</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <div class="stat-value">${totalProducts}</div>
+                                <div class="stat-label">Total Products</div>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -78,9 +93,6 @@
                                 <div class="stat-label">Total Users</div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-info">
                                 <div class="stat-value">${totalSales}</div>
@@ -93,18 +105,6 @@
                                 <div class="stat-label">Pending Orders</div>
                             </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <div class="stat-value">${cancelledOrders}</div>
-                                <div class="stat-label">Cancelled Orders</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <div class="stat-value">${inactiveProducts}</div>
-                                <div class="stat-label">Inactive Products</div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Pending Orders Alert -->
@@ -115,38 +115,44 @@
                         </div>
                     </c:if>
 
-                    <div class="stats-grid">
-                        <div class="card">
+                    <div class="dashboard-chart-grid">
+                        <div class="card analytics-section">
                             <div class="card-header">
                                 <h3>Latest 7 Days Analysis</h3>
                                 <a href="${pageContext.request.contextPath}/admin/reports?period=weekly" class="btn btn-sm btn-outline">Report</a>
                             </div>
                             <div class="card-body">
-                                <canvas id="activityChart"></canvas>
+                                <div class="chart-area">
+                                    <canvas id="activityChart"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <div class="card">
+                        <div class="card analytics-section">
                             <div class="card-header">
                                 <h3>Monthly Sales & Orders</h3>
                                 <a href="${pageContext.request.contextPath}/admin/reports?period=monthly" class="btn btn-sm btn-outline">Full Report</a>
                             </div>
                             <div class="card-body">
-                                <canvas id="dashboardRevenueChart"></canvas>
+                                <div class="chart-area">
+                                    <canvas id="dashboardRevenueChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card analytics-section">
                         <div class="card-header">
                             <h3>Order Status</h3>
                             <a href="${pageContext.request.contextPath}/admin/orders" class="btn btn-sm btn-outline">Manage</a>
                         </div>
                         <div class="card-body">
-                            <canvas id="orderStatusChart"></canvas>
+                            <div class="chart-area chart-area-sm">
+                                <canvas id="orderStatusChart"></canvas>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card analytics-section">
                         <div class="card-header">
                             <h3>Top Selling Products</h3>
                             <a href="${pageContext.request.contextPath}/admin/reports" class="btn btn-sm btn-outline">Analyze</a>
@@ -207,7 +213,7 @@
                                                         <td>#${order.orderId}</td>
                                                         <td>${order.userName}</td>
                                                         <td>Rs <fmt:formatNumber value="${order.totalAmount}" pattern="0.00"/></td>
-                                                        <td><span class="badge badge-${order.status == 'pending' ? 'warning' : order.status == 'delivered' ? 'success' : order.status == 'cancelled' ? 'danger' : 'info'}">${order.status}</span></td>
+                                                        <td><span class="badge badge-${order.status == 'pending' ? 'warning' : order.status == 'confirmed' ? 'success' : order.status == 'delivered' ? 'success' : order.status == 'cancelled' ? 'danger' : 'info'}">${order.status}</span></td>
                                                         <td>${order.orderDate}</td>
                                                         <td><a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=${order.orderId}" class="btn btn-sm btn-outline">View</a></td>
                                                     </tr>
@@ -271,48 +277,98 @@
             </c:forEach>
         ].reverse();
 
+        const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const toWeekdayTotals = (dateLabels, values) => {
+            const totals = [0, 0, 0, 0, 0, 0, 0];
+            dateLabels.forEach((label, index) => {
+                const parsedDate = new Date(label + 'T00:00:00');
+                if (!Number.isNaN(parsedDate.getTime())) {
+                    totals[parsedDate.getDay()] += Number(values[index]) || 0;
+                }
+            });
+            return totals;
+        };
+        const weeklyOrderTotals = toWeekdayTotals(latestDailyLabels, latestDailyOrderData);
+        const weeklyRevenueTotals = toWeekdayTotals(latestDailyLabels, latestDailyRevenueData);
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            }
+        };
+
+        const orderAxisOptions = {
+            type: 'linear',
+            position: 'left',
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Orders'
+            },
+            ticks: {
+                precision: 0,
+                stepSize: 1
+            }
+        };
+
+        const revenueAxisOptions = {
+            type: 'linear',
+            position: 'right',
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Sale Revenue'
+            },
+            ticks: {
+                callback: (value) => 'Rs ' + value
+            },
+            grid: {
+                drawOnChartArea: false
+            }
+        };
+
         new Chart(document.getElementById('activityChart'), {
             type: 'bar',
             data: {
-                labels: latestDailyLabels,
+                labels: weekdayLabels,
                 datasets: [
                     {
-                        label: 'Orders Created',
-                        data: latestDailyOrderData,
+                        label: 'Orders',
+                        data: weeklyOrderTotals,
                         backgroundColor: '#2563eb',
                         borderColor: '#1d4ed8',
                         borderWidth: 1,
+                        maxBarThickness: 36,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'orderAxis'
                     },
                     {
-                        label: 'Sales Revenue',
-                        data: latestDailyRevenueData,
-                        type: 'line',
+                        label: 'Sale Revenue',
+                        data: weeklyRevenueTotals,
+                        backgroundColor: 'rgba(5, 150, 105, 0.72)',
                         borderColor: '#059669',
-                        backgroundColor: 'rgba(5, 150, 105, 0.14)',
-                        borderWidth: 2,
-                        tension: 0.25,
-                        fill: true,
+                        borderWidth: 1,
+                        maxBarThickness: 36,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'revenueAxis'
                     }
                 ]
             },
             options: {
-                responsive: true,
+                ...commonChartOptions,
                 scales: {
-                    orderAxis: {
-                        type: 'linear',
-                        position: 'left',
-                        beginAtZero: true
-                    },
-                    revenueAxis: {
-                        type: 'linear',
-                        position: 'right',
-                        beginAtZero: true,
-                        grid: {
-                            drawOnChartArea: false
-                        }
-                    }
+                    orderAxis: orderAxisOptions,
+                    revenueAxis: revenueAxisOptions
                 }
             }
         });
@@ -325,27 +381,35 @@
                     {
                         label: 'Revenue',
                         data: monthlyRevenueData,
+                        maxBarThickness: 34,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'revenueAxis'
                     },
                     {
                         label: 'Orders',
                         data: monthlyOrderData,
+                        maxBarThickness: 34,
+                        barPercentage: 0.55,
+                        categoryPercentage: 0.6,
                         yAxisID: 'orderAxis'
                     }
                 ]
             },
             options: {
-                responsive: true,
+                ...commonChartOptions,
                 scales: {
                     revenueAxis: {
+                        ...revenueAxisOptions,
                         type: 'linear',
                         position: 'left',
-                        beginAtZero: true
+                        grid: {
+                            drawOnChartArea: true
+                        }
                     },
                     orderAxis: {
-                        type: 'linear',
+                        ...orderAxisOptions,
                         position: 'right',
-                        beginAtZero: true,
                         grid: {
                             drawOnChartArea: false
                         }
@@ -359,11 +423,20 @@
             data: {
                 labels: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
                 datasets: [{
-                    data: [${pendingOrders}, ${confirmedOrders}, ${shippedOrders}, ${deliveredOrders}, ${cancelledOrders}]
+                    data: [${pendingOrders}, ${confirmedOrders}, ${shippedOrders}, ${deliveredOrders}, ${cancelledOrders}],
+                    backgroundColor: ['#f59e0b', '#10b981', '#3b82f6', '#059669', '#ef4444'],
+                    borderColor: ['#d97706', '#059669', '#2563eb', '#047857', '#dc2626'],
+                    borderWidth: 1
                 }]
             },
             options: {
-                responsive: true
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
             }
         });
     </script>
