@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Profile controller - view and update user profile, change password.
  */
-@WebServlet("/profile")
+@WebServlet(name = "ProfileServlet", urlPatterns = {"/profile"})
 public class ProfileServlet extends HttpServlet {
 
     private final UserService userService = new UserService();

@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Authentication controller handling login, register, and logout.
  */
-@WebServlet("/auth")
+@WebServlet(name = "AuthServlet", urlPatterns = {"/auth"})
 public class AuthServlet extends HttpServlet {
 
     private final UserService userService = new UserService();

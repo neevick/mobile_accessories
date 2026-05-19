@@ -88,7 +88,11 @@
                                                         <td><span class="badge badge-${product.status == 'active' ? 'success' : 'danger'}">${product.status}</span></td>
                                                         <td>
                                                             <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${product.productId}" class="btn btn-sm btn-primary">Edit</a>
-                                                            <a href="${pageContext.request.contextPath}/admin/products?action=delete&id=${product.productId}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
+                                                            <form action="${pageContext.request.contextPath}/admin/products" method="post" style="display:inline" onsubmit="return confirm('Are you sure you want to delete this product?')">
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <input type="hidden" name="id" value="${product.productId}">
+                                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                            </form>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

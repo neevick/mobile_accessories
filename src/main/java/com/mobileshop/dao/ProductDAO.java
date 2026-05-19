@@ -2,6 +2,7 @@ package com.mobileshop.dao;
 
 import com.mobileshop.model.Product;
 import com.mobileshop.util.DBUtil;
+import com.mobileshop.util.ImageUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -207,17 +208,51 @@ public class ProductDAO {
     }
 
     public boolean deleteProduct(int id) {
-        String sql = "DELETE FROM products WHERE product_id = ?";
+        String deleteCartSql = "DELETE FROM carts WHERE product_id = ?";
+        String deleteReviewsSql = "DELETE FROM reviews WHERE product_id = ?";
+        String deleteOrderItemsSql = "DELETE FROM order_items WHERE product_id = ?";
+        String deleteProductSql = "DELETE FROM products WHERE product_id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = DBUtil.getConnection();
-            ps = conn.prepareStatement(sql);
+            conn.setAutoCommit(false);
+
+            ps = conn.prepareStatement(deleteCartSql);
             ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
+            ps.close();
+
+            ps = conn.prepareStatement(deleteReviewsSql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps.close();
+
+            ps = conn.prepareStatement(deleteOrderItemsSql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps.close();
+
+            ps = conn.prepareStatement(deleteProductSql);
+            ps.setInt(1, id);
+            boolean deleted = ps.executeUpdate() > 0;
+            conn.commit();
+            return deleted;
         } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException rollbackException) {
+                    System.err.println("Error rolling back product delete: " + rollbackException.getMessage());
+                }
+            }
             System.err.println("Error deleting product: " + e.getMessage());
         } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ignored) {}
+            }
             DBUtil.closeAll(null, ps, conn);
         }
         return false;
@@ -288,7 +323,7 @@ public class ProductDAO {
         product.setStock(rs.getInt("stock"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setBrand(rs.getString("brand"));
-        product.setImage(rs.getString("image"));
+        product.setImage(ImageUtil.resolveProductImage(rs.getString("image"), product.getName(), product.getBrand()));
         product.setStatus(rs.getString("status"));
         product.setCreatedAt(rs.getTimestamp("created_at"));
         product.setUpdatedAt(rs.getTimestamp("updated_at"));

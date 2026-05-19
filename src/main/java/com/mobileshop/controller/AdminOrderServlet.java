@@ -8,12 +8,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Admin Order controller - view and manage orders.
  */
-@WebServlet("/admin/orders")
+@WebServlet(name = "AdminOrderServlet", urlPatterns = {"/admin/orders"})
 public class AdminOrderServlet extends HttpServlet {
 
     private final OrderService orderService = new OrderService();
@@ -52,8 +53,13 @@ public class AdminOrderServlet extends HttpServlet {
         String statusFilter = request.getParameter("status");
         List<Order> orders;
         if (statusFilter != null && !statusFilter.isEmpty()) {
-            orders = orderService.getAllOrders();
-            orders.removeIf(o -> !statusFilter.equals(o.getStatus()));
+            List<Order> allOrders = orderService.getAllOrders();
+            orders = new ArrayList<Order>();
+            for (Order order : allOrders) {
+                if (statusFilter.equals(order.getStatus())) {
+                    orders.add(order);
+                }
+            }
         } else {
             orders = orderService.getAllOrders();
         }

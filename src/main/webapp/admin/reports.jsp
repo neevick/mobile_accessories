@@ -115,7 +115,7 @@
 
                     <div class="card analytics-section">
                         <div class="card-body">
-                            <h3>${period == 'weekly' ? 'Weekly' : 'Monthly'} Sales & Orders</h3>
+                            <h3>Monthly Sales & Orders</h3>
                             <div class="chart-area">
                                 <canvas id="analyticsChart"></canvas>
                             </div>
@@ -178,23 +178,40 @@
 
         const weeklyRevenueData = weeklyLabels.map((label) => weeklyRevenueMap[label] || 0);
 
-        const labels = [
-            <c:forEach var="entry" items="${periodRevenue}" varStatus="st">
+        const monthlyRawLabels = [
+            <c:forEach var="entry" items="${monthlyRevenue}" varStatus="st">
                 "${entry.key}"<c:if test="${!st.last}">,</c:if>
             </c:forEach>
         ].reverse();
 
-        const revenueData = [
-            <c:forEach var="entry" items="${periodRevenue}" varStatus="st">
+        const monthlyRawRevenueData = [
+            <c:forEach var="entry" items="${monthlyRevenue}" varStatus="st">
                 ${entry.value}<c:if test="${!st.last}">,</c:if>
             </c:forEach>
         ].reverse();
 
-        const orderData = [
-            <c:forEach var="entry" items="${periodOrders}" varStatus="st">
+        const monthlyRawOrderData = [
+            <c:forEach var="entry" items="${monthlyOrders}" varStatus="st">
                 ${entry.value}<c:if test="${!st.last}">,</c:if>
             </c:forEach>
         ].reverse();
+
+        const monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        // Match database month labels like 2026-05 to the Jan-Dec chart.
+        const toMonthlyTotals = (dateLabels, values) => {
+            const totals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            dateLabels.forEach((label, index) => {
+                const monthNumber = parseInt(String(label).substring(5, 7), 10);
+                if (monthNumber >= 1 && monthNumber <= 12) {
+                    totals[monthNumber - 1] += Number(values[index]) || 0;
+                }
+            });
+            return totals;
+        };
+
+        const monthlyRevenueData = toMonthlyTotals(monthlyRawLabels, monthlyRawRevenueData);
+        const monthlyOrderData = toMonthlyTotals(monthlyRawLabels, monthlyRawOrderData);
 
         const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         const toWeekdayTotals = (dateLabels, values) => {
@@ -293,24 +310,34 @@
         });
 
         new Chart(document.getElementById('analyticsChart'), {
-            type: 'bar',
+            type: 'line',
             data: {
-                labels: labels,
+                labels: monthlyLabels,
                 datasets: [
                     {
-                        label: 'Revenue',
-                        data: revenueData,
-                        maxBarThickness: 34,
-                        barPercentage: 0.55,
-                        categoryPercentage: 0.6,
+                        label: 'Sale Revenue',
+                        data: monthlyRevenueData,
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.22)',
+                        pointBackgroundColor: '#22c55e',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 3,
+                        pointRadius: 4,
+                        tension: 0.35,
+                        fill: true,
                         yAxisID: 'revenueAxis'
                     },
                     {
                         label: 'Orders',
-                        data: orderData,
-                        maxBarThickness: 34,
-                        barPercentage: 0.55,
-                        categoryPercentage: 0.6,
+                        data: monthlyOrderData,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.12)',
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 3,
+                        tension: 0.35,
+                        fill: true,
                         yAxisID: 'orderAxis'
                     }
                 ]

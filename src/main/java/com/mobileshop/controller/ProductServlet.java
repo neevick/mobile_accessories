@@ -5,6 +5,7 @@ import com.mobileshop.model.Product;
 import com.mobileshop.model.Review;
 import com.mobileshop.service.ProductService;
 import com.mobileshop.service.ReviewService;
+import com.mobileshop.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * User-facing Product controller - browse, search, view products.
  */
-@WebServlet("/products")
+@WebServlet(name = "ProductServlet", urlPatterns = {"/products"})
 public class ProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
@@ -55,6 +56,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
         List<Product> products = productService.getActiveProducts();
         List<Category> categories = productService.getActiveCategories();
         request.setAttribute("products", products);
@@ -63,6 +65,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void showDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
         Integer id = parseInt(request.getParameter("id"));
         if (id == null) {
             response.sendRedirect(request.getContextPath() + "/products");
@@ -83,6 +86,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void searchProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
         String keyword = request.getParameter("keyword");
         List<Product> products = productService.searchProducts(keyword);
         List<Category> categories = productService.getActiveCategories();
@@ -93,6 +97,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void listByCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
         Integer categoryId = parseInt(request.getParameter("id"));
         if (categoryId == null) {
             response.sendRedirect(request.getContextPath() + "/products");

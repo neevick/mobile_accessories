@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Admin Dashboard controller.
  */
-@WebServlet("/admin/dashboard")
+@WebServlet(name = "AdminDashboardServlet", urlPatterns = {"/admin/dashboard"})
 public class AdminDashboardServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();
@@ -27,7 +27,6 @@ public class AdminDashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Dashboard statistics
         int totalProducts = productService.countProducts();
-        int inactiveProducts = productService.countProductsByStatus("inactive");
         int totalOrders = orderService.countOrders();
         int todayOrders = orderService.countOrdersToday();
         int thisWeekOrders = orderService.countOrdersThisWeek();
@@ -39,8 +38,9 @@ public class AdminDashboardServlet extends HttpServlet {
         int deliveredOrders = orderService.countOrdersByStatus("delivered");
         int cancelledOrders = orderService.countOrdersByStatus("cancelled");
         java.math.BigDecimal revenue = orderService.getTotalRevenue();
-        Map<String, java.math.BigDecimal> monthlyRevenue = orderService.getRevenueByPeriod("monthly", 6);
-        Map<String, Integer> monthlyOrders = orderService.getOrderCountByPeriod("monthly", 6);
+        // Load all months so the chart always shows Jan to Dec.
+        Map<String, java.math.BigDecimal> monthlyRevenue = orderService.getRevenueByPeriod("monthly", 12);
+        Map<String, Integer> monthlyOrders = orderService.getOrderCountByPeriod("monthly", 12);
         Map<String, java.math.BigDecimal> latestDailyRevenue = orderService.getLatestDailyRevenue(7);
         Map<String, Integer> latestDailyOrders = orderService.getLatestDailyOrderCounts(7);
         Map<String, Integer> topProducts = orderService.getTopSellingProducts(5);
@@ -48,7 +48,6 @@ public class AdminDashboardServlet extends HttpServlet {
         if (recentOrders.size() > 5) recentOrders = recentOrders.subList(0, 5);
 
         request.setAttribute("totalProducts", totalProducts);
-        request.setAttribute("inactiveProducts", inactiveProducts);
         request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("todayOrders", todayOrders);
         request.setAttribute("thisWeekOrders", thisWeekOrders);

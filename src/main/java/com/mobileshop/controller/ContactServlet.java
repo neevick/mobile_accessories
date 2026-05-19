@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Contact controller - handles contact form submissions.
  */
-@WebServlet("/contact")
+@WebServlet(name = "ContactServlet", urlPatterns = {"/contact"})
 public class ContactServlet extends HttpServlet {
 
     private final ContactService contactService = new ContactService();

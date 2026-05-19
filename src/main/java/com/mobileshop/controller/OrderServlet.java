@@ -19,7 +19,7 @@ import java.util.List;
  * User-facing Order controller - place orders, view order history.
  * Uses session to store cart items.
  */
-@WebServlet("/orders")
+@WebServlet(name = "OrderServlet", urlPatterns = {"/orders"})
 public class OrderServlet extends HttpServlet {
 
     private final OrderService orderService = new OrderService();
@@ -150,7 +150,12 @@ public class OrderServlet extends HttpServlet {
         HttpSession session = request.getSession();
         List<OrderItem> cart = (List<OrderItem>) session.getAttribute("cart");
         if (cart != null) {
-            cart.removeIf(item -> item.getProductId() == productId);
+            for (int i = cart.size() - 1; i >= 0; i--) {
+                OrderItem item = cart.get(i);
+                if (item.getProductId() == productId) {
+                    cart.remove(i);
+                }
+            }
             session.setAttribute("cart", cart);
         }
         response.sendRedirect(request.getContextPath() + "/orders?action=cart");

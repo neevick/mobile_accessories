@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Admin Category controller - CRUD operations for categories.
  */
-@WebServlet("/admin/categories")
+@WebServlet(name = "AdminCategoryServlet", urlPatterns = {"/admin/categories"})
 public class AdminCategoryServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();

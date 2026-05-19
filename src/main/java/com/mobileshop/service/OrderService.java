@@ -93,10 +93,6 @@ public class OrderService {
         return orderDAO.countSales();
     }
 
-    public Map<String, BigDecimal> getMonthlyRevenue(int limitMonths) {
-        return orderDAO.getMonthlyRevenue(limitMonths);
-    }
-
     public Map<String, BigDecimal> getRevenueByPeriod(String period, int limit) {
         return orderDAO.getRevenueByPeriod(period, limit);
     }
@@ -117,7 +113,4 @@ public class OrderService {
         return orderDAO.getTopSellingProducts(limit);
     }
 
-    public Map<String, Integer> getTopOrderItems(int limit) {
-        return orderDAO.getTopOrderItems(limit);
-    }
 }

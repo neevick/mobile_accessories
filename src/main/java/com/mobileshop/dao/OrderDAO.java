@@ -274,10 +274,10 @@ public class OrderDAO {
     }
 
     /**
-     * Counts orders considered "sales".
+     * Counts only fully completed sales.
      */
     public int countSales() {
-        String sql = "SELECT COUNT(*) FROM orders WHERE status IN ('confirmed', 'shipped', 'delivered')";
+        String sql = "SELECT COUNT(*) FROM orders WHERE status = 'delivered'";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -292,39 +292,6 @@ public class OrderDAO {
             DBUtil.closeAll(rs, ps, conn);
         }
         return 0;
-    }
-
-    /**
-     * Monthly revenue for delivered/confirmed/shipped orders.
-     * Key is formatted as YYYY-MM.
-     */
-    public Map<String, java.math.BigDecimal> getMonthlyRevenue(int limitMonths) {
-        Map<String, java.math.BigDecimal> out = new LinkedHashMap<>();
-        String sql =
-                "SELECT DATE_FORMAT(order_date, '%Y-%m') AS ym, COALESCE(SUM(total_amount),0) AS revenue " +
-                "FROM orders " +
-                "WHERE status IN ('confirmed','shipped','delivered') " +
-                "GROUP BY ym " +
-                "ORDER BY ym DESC " +
-                "LIMIT ?";
-
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = DBUtil.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, Math.max(1, limitMonths));
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                out.put(rs.getString("ym"), rs.getBigDecimal("revenue"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error getting monthly revenue: " + e.getMessage());
-        } finally {
-            DBUtil.closeAll(rs, ps, conn);
-        }
-        return out;
     }
 
     public Map<String, java.math.BigDecimal> getRevenueByPeriod(String period, int limit) {
@@ -478,14 +445,6 @@ public class OrderDAO {
             DBUtil.closeAll(rs, ps, conn);
         }
         return out;
-    }
-
-    /**
-     * Top order items (product -> qty sold), limited.
-     * Kept separate from top products to match assignment wording.
-     */
-    public Map<String, Integer> getTopOrderItems(int limit) {
-        return getTopSellingProducts(limit);
     }
 
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {

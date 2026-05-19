@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Admin Product controller - CRUD operations for products.
  */
-@WebServlet("/admin/products")
+@WebServlet(name = "AdminProductServlet", urlPatterns = {"/admin/products"})
 @MultipartConfig(maxFileSize = 16177215)
 public class AdminProductServlet extends HttpServlet {
 
@@ -68,6 +68,7 @@ public class AdminProductServlet extends HttpServlet {
     }
 
     private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
         List<Product> products = productService.getAllProducts();
         request.setAttribute("products", products);
         request.getRequestDispatcher("/admin/products.jsp").forward(request, response);
@@ -80,6 +81,7 @@ public class AdminProductServlet extends HttpServlet {
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
         Integer id = parseInt(request.getParameter("id"));
         if (id == null) {
             response.sendRedirect(request.getContextPath() + "/admin/products");
@@ -213,7 +215,8 @@ public class AdminProductServlet extends HttpServlet {
         if (imagePart != null && imagePart.getSize() > 0) {
             String originalName = ImageUtil.getSubmittedFileName(imagePart);
             try (InputStream is = imagePart.getInputStream()) {
-                String savedName = ImageUtil.updateImage(is, originalName, existingImage, contextPath);
+                // Store uploaded files with the product name so Git shows clear image names.
+                String savedName = ImageUtil.updateImage(is, originalName, existingImage, contextPath, name, brand);
                 if (savedName != null) {
                     imageFileName = savedName;
                 } else {

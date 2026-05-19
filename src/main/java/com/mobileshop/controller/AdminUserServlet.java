@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Admin User controller - manage users, approve registrations.
  */
-@WebServlet("/admin/users")
+@WebServlet(name = "AdminUserServlet", urlPatterns = {"/admin/users"})
 public class AdminUserServlet extends HttpServlet {
 
     private final UserService userService = new UserService();
