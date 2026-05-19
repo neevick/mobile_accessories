@@ -4,6 +4,7 @@ import com.mobileshop.model.Order;
 import com.mobileshop.model.OrderItem;
 import com.mobileshop.model.Product;
 import com.mobileshop.model.User;
+import com.mobileshop.service.CartService;
 import com.mobileshop.service.OrderService;
 import com.mobileshop.service.ProductService;
 
@@ -12,18 +13,18 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User-facing Order controller - place orders, view order history.
- * Uses session to store cart items.
+ * Uses database to store cart items.
  */
 @WebServlet(name = "OrderServlet", urlPatterns = {"/orders"})
 public class OrderServlet extends HttpServlet {
 
     private final OrderService orderService = new OrderService();
     private final ProductService productService = new ProductService();
+    private final CartService cartService = new CartService();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -83,11 +84,10 @@ public class OrderServlet extends HttpServlet {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void showCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        List<OrderItem> cart = (List<OrderItem>) session.getAttribute("cart");
-        if (cart == null) cart = new ArrayList<>();
+        int userId = (int) session.getAttribute("userId");
+        List<OrderItem> cart = cartService.getCartByUserId(userId);
 
         BigDecimal total = BigDecimal.ZERO;
         for (OrderItem item : cart) {
@@ -99,7 +99,6 @@ public class OrderServlet extends HttpServlet {
         request.getRequestDispatcher("/user/cart.jsp").forward(request, response);
     }
 
-    @SuppressWarnings("unchecked")
     private void addToCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int productId = Integer.parseInt(request.getParameter("productId"));
         int quantity = 1;
@@ -119,74 +118,40 @@ public class OrderServlet extends HttpServlet {
         }
 
         HttpSession session = request.getSession();
-        List<OrderItem> cart = (List<OrderItem>) session.getAttribute("cart");
-        if (cart == null) cart = new ArrayList<>();
-
-        // Check if product already in cart
-        boolean found = false;
-        for (OrderItem item : cart) {
-            if (item.getProductId() == productId) {
-                int newQty = item.getQuantity() + quantity;
-                if (newQty > product.getStock()) newQty = product.getStock();
-                item.setQuantity(newQty);
-                found = true;
-                break;
-            }
+        int userId = (int) session.getAttribute("userId");
+        
+        boolean added = cartService.addToCart(userId, productId, quantity);
+        if (added) {
+            session.setAttribute("success", "Product added to cart!");
+        } else {
+            session.setAttribute("error", "Failed to add product to cart.");
         }
-        if (!found) {
-            OrderItem item = new OrderItem(productId, quantity, product.getPrice());
-            item.setProductName(product.getName());
-            cart.add(item);
-        }
-
-        session.setAttribute("cart", cart);
-        session.setAttribute("success", "Product added to cart!");
         response.sendRedirect(request.getContextPath() + "/products?action=detail&id=" + productId);
     }
 
-    @SuppressWarnings("unchecked")
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int productId = Integer.parseInt(request.getParameter("productId"));
         HttpSession session = request.getSession();
-        List<OrderItem> cart = (List<OrderItem>) session.getAttribute("cart");
-        if (cart != null) {
-            for (int i = cart.size() - 1; i >= 0; i--) {
-                OrderItem item = cart.get(i);
-                if (item.getProductId() == productId) {
-                    cart.remove(i);
-                }
-            }
-            session.setAttribute("cart", cart);
-        }
+        int userId = (int) session.getAttribute("userId");
+        
+        cartService.removeFromCart(userId, productId);
         response.sendRedirect(request.getContextPath() + "/orders?action=cart");
     }
 
-    @SuppressWarnings("unchecked")
     private void updateCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int productId = Integer.parseInt(request.getParameter("productId"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         HttpSession session = request.getSession();
-        List<OrderItem> cart = (List<OrderItem>) session.getAttribute("cart");
-        if (cart != null) {
-            for (OrderItem item : cart) {
-                if (item.getProductId() == productId) {
-                    if (quantity <= 0) {
-                        cart.remove(item);
-                    } else {
-                        item.setQuantity(quantity);
-                    }
-                    break;
-                }
-            }
-            session.setAttribute("cart", cart);
-        }
+        int userId = (int) session.getAttribute("userId");
+        
+        cartService.updateCartItem(userId, productId, quantity);
         response.sendRedirect(request.getContextPath() + "/orders?action=cart");
     }
 
-    @SuppressWarnings("unchecked")
     private void showCheckout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        List<OrderItem> cart = (List<OrderItem>) session.getAttribute("cart");
+        int userId = (int) session.getAttribute("userId");
+        List<OrderItem> cart = cartService.getCartByUserId(userId);
         if (cart == null || cart.isEmpty()) {
             request.setAttribute("error", "Your cart is empty.");
             showCart(request, response);
@@ -199,11 +164,10 @@ public class OrderServlet extends HttpServlet {
         request.getRequestDispatcher("/user/checkout.jsp").forward(request, response);
     }
 
-    @SuppressWarnings("unchecked")
     private void placeOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userId");
-        List<OrderItem> cart = (List<OrderItem>) session.getAttribute("cart");
+        List<OrderItem> cart = cartService.getCartByUserId(userId);
 
         if (cart == null || cart.isEmpty()) {
             session.setAttribute("error", "Your cart is empty.");
@@ -218,7 +182,7 @@ public class OrderServlet extends HttpServlet {
         int orderId = orderService.placeOrder(userId, shippingAddress, phone, cart, errorMsg);
 
         if (orderId > 0) {
-            session.removeAttribute("cart");
+            cartService.clearCart(userId);
             session.setAttribute("success", "Order placed successfully! Order ID: " + orderId);
             response.sendRedirect(request.getContextPath() + "/orders?action=detail&id=" + orderId);
         } else {
