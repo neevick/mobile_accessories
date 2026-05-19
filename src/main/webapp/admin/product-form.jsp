@@ -102,10 +102,11 @@
                                 <label class="form-label">Product Image</label>
                                 <div class="admin-image-upload">
                                     <c:if test="${not empty product.image}">
+                                        <c:url var="productImageUrl" value="/resources/images/${product.image}" />
                                         <div class="current-image-preview mb-2">
                                             <p class="form-label mb-1">Current image</p>
                                             <img id="currentProductImage"
-                                                 src="${pageContext.request.contextPath}/resources/images/${product.image}"
+                                                 src="${productImageUrl}"
                                                  alt="${product.name}"
                                                  class="admin-product-thumb">
                                             <label class="remove-image-label mt-1">

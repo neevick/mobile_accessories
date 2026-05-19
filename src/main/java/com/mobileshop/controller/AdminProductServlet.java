@@ -68,7 +68,7 @@ public class AdminProductServlet extends HttpServlet {
     }
 
     private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
+        syncProductImages(request);
         List<Product> products = productService.getAllProducts();
         request.setAttribute("products", products);
         request.getRequestDispatcher("/admin/products.jsp").forward(request, response);
@@ -81,7 +81,7 @@ public class AdminProductServlet extends HttpServlet {
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
+        syncProductImages(request);
         Integer id = parseInt(request.getParameter("id"));
         if (id == null) {
             response.sendRedirect(request.getContextPath() + "/admin/products");
@@ -280,5 +280,11 @@ public class AdminProductServlet extends HttpServlet {
 
     private String trim(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private void syncProductImages(HttpServletRequest request) {
+        String contextPath = request.getServletContext().getRealPath("/");
+        ImageUtil.syncImagesToRuntime(contextPath);
+        productService.syncProductImages(contextPath);
     }
 }

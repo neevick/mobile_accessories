@@ -189,6 +189,44 @@ public class ProductDAO {
         return false;
     }
 
+    public void syncProductImageNames(String contextRealPath) {
+        String selectSql = "SELECT product_id, name, brand, image FROM products";
+        String updateSql = "UPDATE products SET image = ? WHERE product_id = ?";
+        Connection conn = null;
+        PreparedStatement selectPs = null;
+        PreparedStatement updatePs = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.getConnection();
+            selectPs = conn.prepareStatement(selectSql);
+            updatePs = conn.prepareStatement(updateSql);
+            rs = selectPs.executeQuery();
+            while (rs.next()) {
+                int productId = rs.getInt("product_id");
+                String currentImage = rs.getString("image");
+                String resolvedImage = ImageUtil.resolveProductImage(
+                        currentImage,
+                        rs.getString("name"),
+                        rs.getString("brand"),
+                        contextRealPath);
+
+                // Keep the database image column aligned with resources/images filenames.
+                if (resolvedImage != null && !resolvedImage.equals(currentImage)) {
+                    updatePs.setString(1, resolvedImage);
+                    updatePs.setInt(2, productId);
+                    updatePs.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error syncing product image names: " + e.getMessage());
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(selectPs);
+            DBUtil.close(updatePs);
+            DBUtil.close(conn);
+        }
+    }
+
     public boolean updateStock(int productId, int newStock) {
         String sql = "UPDATE products SET stock = ? WHERE product_id = ?";
         Connection conn = null;
@@ -323,7 +361,8 @@ public class ProductDAO {
         product.setStock(rs.getInt("stock"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setBrand(rs.getString("brand"));
-        product.setImage(ImageUtil.resolveProductImage(rs.getString("image"), product.getName(), product.getBrand()));
+        String image = ImageUtil.resolveProductImage(rs.getString("image"), product.getName(), product.getBrand());
+        product.setImage(image);
         product.setStatus(rs.getString("status"));
         product.setCreatedAt(rs.getTimestamp("created_at"));
         product.setUpdatedAt(rs.getTimestamp("updated_at"));

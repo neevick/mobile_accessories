@@ -143,6 +143,10 @@ public class ProductService {
         return productDAO.updateProduct(product);
     }
 
+    public void syncProductImages(String contextRealPath) {
+        productDAO.syncProductImageNames(contextRealPath);
+    }
+
     public boolean addProduct(Product product) {
         int id = productDAO.createProduct(product);
         if (id > 0) {

@@ -71,7 +71,8 @@
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${not empty product.image}">
-                                                                    <img src="${pageContext.request.contextPath}/resources/images/${product.image}"
+                                                                    <c:url var="productImageUrl" value="/resources/images/${product.image}" />
+                                                                    <img src="${productImageUrl}"
                                                                          alt="${product.name}"
                                                                          class="admin-product-thumb admin-product-thumb--table">
                                                                 </c:when>
