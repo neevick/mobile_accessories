@@ -9,16 +9,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
-            <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
-                <li><a href="${pageContext.request.contextPath}/profile">${sessionScope.userName}</a></li>
-                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
+    <jsp:include page="/WEB-INF/includes/navbar.jsp">
+        <jsp:param name="type" value="user"/>
+    </jsp:include>
 
     <main class="main-content">
         <div class="container" style="max-width:500px">
