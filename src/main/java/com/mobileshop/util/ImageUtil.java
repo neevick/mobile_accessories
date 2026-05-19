@@ -6,7 +6,6 @@ import java.util.UUID;
 
 public class ImageUtil {
 
-    private static final String IMAGES_DIR = "resources" + File.separator + "images";
     private static final String[] ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "webp"};
 
     public static String saveImage(InputStream inputStream, String originalFileName, String contextRealPath) {
@@ -20,13 +19,16 @@ public class ImageUtil {
         }
         String fileName = UUID.randomUUID().toString() + "." + extension;
         try {
-            Path targetDir = Paths.get(contextRealPath, IMAGES_DIR);
+            // Use the servlet context real path for proper deployment
+            Path targetDir = Paths.get(contextRealPath, "resources", "images");
             Files.createDirectories(targetDir);
             Path targetPath = targetDir.resolve(fileName);
             Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Image saved successfully: " + targetPath);
             return fileName;
         } catch (IOException e) {
             System.err.println("Error saving image: " + e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -43,10 +45,16 @@ public class ImageUtil {
             return true;
         }
         try {
-            Path filePath = Paths.get(contextRealPath, IMAGES_DIR, fileName);
-            return Files.deleteIfExists(filePath);
+            // Use the servlet context real path for proper deployment
+            Path filePath = Paths.get(contextRealPath, "resources", "images", fileName);
+            boolean deleted = Files.deleteIfExists(filePath);
+            if (deleted) {
+                System.out.println("Image deleted successfully: " + filePath);
+            }
+            return deleted;
         } catch (IOException e) {
             System.err.println("Error deleting image: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }

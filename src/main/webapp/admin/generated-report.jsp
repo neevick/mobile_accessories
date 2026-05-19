@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -6,16 +6,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generated Report - Mobile Accessories Admin</title>
+    <title>Generated Report - MobileAccessories Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=6">
 </head>
 <body>
-    <nav class="navbar">
+     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
             <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/admin/reports" class="active">Reports</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
                 <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
             </ul>
         </div>
@@ -34,9 +33,9 @@
                     <button type="button" class="btn btn-sm btn-primary" id="copyReportBtn">Copy Report</button>
                 </div>
                 <div class="card-body">
-                    <textarea id="generatedReportText" class="form-control report-textarea" readonly>Mobile Accessories ${period == 'weekly' ? 'Weekly' : 'Monthly'} Report
+                    <textarea id="generatedReportText" class="form-control report-textarea" readonly>MobileAccessories ${period == 'weekly' ? 'Weekly' : 'Monthly'} Report
 
-					Sale Revenue: Rs <fmt:formatNumber value="${totalRevenue}" pattern="0.00"/>
+					Sale Revenue: Rs. <fmt:formatNumber value="${totalRevenue}" pattern="#,##0"/>
 					Today Orders: ${todayOrders}
 					This Week Order: ${thisWeekOrders}
 					Total Order: ${totalOrders}

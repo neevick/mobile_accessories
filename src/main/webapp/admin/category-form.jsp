@@ -1,24 +1,24 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${empty category ? 'Add' : 'Edit'} Category - Mobile Accessories Admin</title>
+    <title>${empty category ? 'Add' : 'Edit'} Category - MobileAccessories Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <nav class="navbar">
+     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
             <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/admin/categories" class="active">Categories</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
                 <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
             </ul>
         </div>
     </nav>
+    
 
     <main class="main-content">
         <div class="container">
@@ -71,7 +71,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories Admin.</p></div>
+        <div class="container"><p>&copy; 2026 MobileAccessories Admin.</p></div>
     </footer>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>

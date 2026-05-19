@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -6,39 +6,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Mobile Accessories Online Shop</title>
+    <title>Home - MobileAccessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-                Mobile Accessories
-            </a>
-            <button class="navbar-toggle" onclick="toggleNav()">&#9776;</button>
-            <ul class="navbar-nav" id="navbarNav">
-                <li><a href="${pageContext.request.contextPath}/" class="active">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
-                <li><a href="${pageContext.request.contextPath}/about.jsp">About</a></li>
-                <li><a href="${pageContext.request.contextPath}/contact">Contact</a></li>
-                <c:choose>
-                    <c:when test="${not empty sessionScope.user}">
-                        <c:if test="${sessionScope.userRole == 'admin'}">
-                            <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                        </c:if>
-                        <li><a href="${pageContext.request.contextPath}/orders?action=cart">Cart</a></li>
-                        <li><a href="${pageContext.request.contextPath}/profile" class="nav-user">&#128100; ${sessionScope.userName}</a></li>
-                        <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
-                    </c:when>
-                    <c:otherwise>
-                        <li><a href="${pageContext.request.contextPath}/auth?action=login">Login</a></li>
-                        <li><a href="${pageContext.request.contextPath}/auth?action=register">Register</a></li>
-                    </c:otherwise>
-                </c:choose>
-            </ul>
-        </div>
-    </nav>
+    <jsp:include page="/WEB-INF/includes/navbar.jsp">
+        <jsp:param name="type" value="public"/>
+    </jsp:include>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -88,7 +62,7 @@
                                 <div class="product-info">
                                     <div class="product-name">${product.name}</div>
                                     <div class="product-brand">${product.brand}</div>
-                                    <div class="product-price">$<fmt:formatNumber value="${product.price}" pattern="0.00"/></div>
+                                    <div class="product-price">Rs. <fmt:formatNumber value="${product.price}" pattern="#,##0"/></div>
                                     <div class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
                                         <c:choose>
                                             <c:when test="${product.stock > 0}">${product.stock} in stock</c:when>
@@ -111,7 +85,7 @@
                 </c:otherwise>
             </c:choose>
 
-            <h2 class="mb-2">Why Choose Mobile Accessories?</h2>
+            <h2 class="mb-2">Why Choose MobileAccessories?</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon blue">&#128230;</div>
@@ -148,7 +122,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 Mobile Accessories. All rights reserved.</p>
+            <p>&copy; 2026 MobileAccessories. All rights reserved.</p>
             <ul class="footer-links">
                 <li><a href="${pageContext.request.contextPath}/about.jsp">About</a></li>
                 <li><a href="${pageContext.request.contextPath}/contact">Contact</a></li>

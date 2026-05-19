@@ -1,30 +1,22 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mobile Accessories</title>
+    <title>Login - MobileAccessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-                Mobile Accessories
-            </a>
-            <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
-            </ul>
-        </div>
-    </nav>
+    <jsp:include page="/WEB-INF/includes/navbar.jsp">
+        <jsp:param name="type" value="auth"/>
+    </jsp:include>
 
     <div class="auth-wrapper">
         <div class="auth-card">
             <h1>Welcome Back</h1>
-            <p class="auth-subtitle">Sign in to your Mobile Accessories account</p>
+            <p class="auth-subtitle">Sign in to your MobileAccessories account</p>
 
             <c:if test="${not empty success}">
                 <div class="alert alert-success">${success}</div>
@@ -59,7 +51,7 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 Mobile Accessories. All rights reserved.</p>
+            <p>&copy; 2026 MobileAccessories. All rights reserved.</p>
         </div>
     </footer>
 </body>

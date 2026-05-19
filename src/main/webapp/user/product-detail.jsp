@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -6,13 +6,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${product.name} - Mobile Accessories</title>
+    <title>${product.name} - MobileAccessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
             <button class="navbar-toggle" onclick="toggleNav()">&#9776;</button>
             <ul class="navbar-nav" id="navbarNav">
                 <li><a href="${pageContext.request.contextPath}/">Home</a></li>
@@ -60,7 +60,7 @@
                         <span class="text-muted">(${avgRating >= 0 ? String.format("%.1f", avgRating) : "0.0"} / 5)</span>
                     </div>
 
-                    <div class="product-price" style="font-size:2rem;margin:0.5rem 0">$<fmt:formatNumber value="${product.price}" pattern="0.00"/></div>
+                    <div class="product-price" style="font-size:2rem;margin:0.5rem 0">Rs. <fmt:formatNumber value="${product.price}" pattern="#,##0"/></div>
 
                     <div class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'} mb-2" style="font-size:1rem">
                         <c:choose>
@@ -148,7 +148,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories.</p></div>
+        <div class="container"><p>&copy; 2026 MobileAccessories.</p></div>
     </footer>
 
     <script>

@@ -4,12 +4,14 @@ import com.mobileshop.model.User;
 import com.mobileshop.service.UserService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
 /**
  * Authentication controller handling login, register, and logout.
  */
+@WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
 
     private final UserService userService = new UserService();

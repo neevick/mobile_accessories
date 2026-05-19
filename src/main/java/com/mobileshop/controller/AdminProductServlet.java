@@ -7,6 +7,7 @@ import com.mobileshop.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Admin Product controller - CRUD operations for products.
  */
+@WebServlet("/admin/products")
 @MultipartConfig(maxFileSize = 16177215)
 public class AdminProductServlet extends HttpServlet {
 
@@ -133,8 +135,13 @@ public class AdminProductServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/admin/products");
         } else {
             request.setAttribute("error", errorMsg.toString());
+            if (updatedProduct == null) {
+                updatedProduct = existingProduct;
+            }
+            List<Category> categories = productService.getAllCategories();
             request.setAttribute("product", updatedProduct);
-            showEditForm(request, response);
+            request.setAttribute("categories", categories);
+            request.getRequestDispatcher("/admin/product-form.jsp").forward(request, response);
         }
     }
 
@@ -142,17 +149,39 @@ public class AdminProductServlet extends HttpServlet {
         Integer id = parseInt(request.getParameter("id"));
 
         if (id != null) {
-            Product product = productService.getProductById(id);
-            if (product != null && productService.deleteProduct(id)) {
-                if (product.getImage() != null && !product.getImage().isEmpty()) {
-                    ImageUtil.deleteImage(product.getImage(), request.getServletContext().getRealPath("/"));
+            try {
+                Product product = productService.getProductById(id);
+                if (product == null) {
+                    request.getSession().setAttribute("error", "Product not found.");
+                    response.sendRedirect(request.getContextPath() + "/admin/products");
+                    return;
                 }
-                request.getSession().setAttribute("success", "Product deleted successfully!");
-            } else {
-                request.getSession().setAttribute("error", "Failed to delete product.");
+
+                // Store image filename before deletion
+                String imageFileName = product.getImage();
+
+                // Delete from database first
+                if (productService.deleteProduct(id)) {
+                    // Delete image file if it exists
+                    if (imageFileName != null && !imageFileName.isEmpty()) {
+                        boolean imageDeleted = ImageUtil.deleteImage(imageFileName, request.getServletContext().getRealPath("/"));
+                        if (!imageDeleted) {
+                            System.err.println("Warning: Failed to delete image file: " + imageFileName);
+                        }
+                    }
+                    request.getSession().setAttribute("success", "Product deleted successfully!");
+                    System.out.println("Product deleted successfully: ID=" + id);
+                } else {
+                    request.getSession().setAttribute("error", "Failed to delete product from database.");
+                    System.err.println("Failed to delete product from database: ID=" + id);
+                }
+            } catch (Exception e) {
+                request.getSession().setAttribute("error", "Error deleting product: " + e.getMessage());
+                System.err.println("Error deleting product: " + e.getMessage());
+                e.printStackTrace();
             }
         } else {
-            request.getSession().setAttribute("error", "Failed to delete product.");
+            request.getSession().setAttribute("error", "Invalid product ID.");
         }
 
         response.sendRedirect(request.getContextPath() + "/admin/products");
@@ -170,14 +199,26 @@ public class AdminProductServlet extends HttpServlet {
         Integer stock = parseInt(request.getParameter("stock"));
         Integer categoryId = parseInt(request.getParameter("categoryId"));
 
+        String contextPath = request.getServletContext().getRealPath("/");
         String existingImage = product != null ? product.getImage() : null;
         String imageFileName = existingImage;
+        boolean removeImage = "on".equalsIgnoreCase(trim(request.getParameter("removeImage")));
+
+        if (removeImage && existingImage != null && !existingImage.isEmpty()) {
+            ImageUtil.deleteImage(existingImage, contextPath);
+            imageFileName = null;
+        }
 
         jakarta.servlet.http.Part imagePart = request.getPart("image");
         if (imagePart != null && imagePart.getSize() > 0) {
             String originalName = ImageUtil.getSubmittedFileName(imagePart);
             try (InputStream is = imagePart.getInputStream()) {
-                imageFileName = ImageUtil.updateImage(is, originalName, existingImage, request.getServletContext().getRealPath("/"));
+                String savedName = ImageUtil.updateImage(is, originalName, existingImage, contextPath);
+                if (savedName != null) {
+                    imageFileName = savedName;
+                } else {
+                    errorMsg.append("Invalid image file. Use JPG, PNG, GIF, or WEBP. ");
+                }
             }
         }
 
@@ -191,6 +232,11 @@ public class AdminProductServlet extends HttpServlet {
         if (product == null) {
             product = new Product();
             product.setStatus("active");
+        } else {
+            Integer productId = parseInt(request.getParameter("id"));
+            if (productId != null) {
+                product.setProductId(productId);
+            }
         }
 
         product.setName(name);
@@ -206,6 +252,8 @@ public class AdminProductServlet extends HttpServlet {
 
         if (imageFileName != null) {
             product.setImage(imageFileName);
+        } else if (removeImage) {
+            product.setImage(null);
         }
 
         return product;

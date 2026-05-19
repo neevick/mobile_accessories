@@ -7,6 +7,7 @@ import com.mobileshop.service.ProductService;
 import com.mobileshop.service.UserService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * Admin Dashboard controller.
  */
+@WebServlet("/admin/dashboard")
 public class AdminDashboardServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 
@@ -7,25 +7,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Mobile Accessories</title>
+    <title>Admin Dashboard - MobileAccessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=6">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-                Mobile Accessories
-            </a>
-            <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
-                <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
+    <jsp:include page="/WEB-INF/includes/navbar.jsp">
+        <jsp:param name="type" value="admin"/>
+    </jsp:include>
+
 
     <main class="main-content">
         <div class="container">
@@ -74,7 +65,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-info">
-                                <div class="stat-value">Rs <fmt:formatNumber value="${revenue}" pattern="0.00"/></div>
+                                <div class="stat-value">Rs. <fmt:formatNumber value="${revenue}" pattern="#,##0"/></div>
                                 <div class="stat-label">Sale Revenue</div>
                             </div>
                         </div>
@@ -212,7 +203,7 @@
                                                     <tr>
                                                         <td>#${order.orderId}</td>
                                                         <td>${order.userName}</td>
-                                                        <td>Rs <fmt:formatNumber value="${order.totalAmount}" pattern="0.00"/></td>
+                                                        <td>Rs. <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/></td>
                                                         <td><span class="badge badge-${order.status == 'pending' ? 'warning' : order.status == 'confirmed' ? 'success' : order.status == 'delivered' ? 'success' : order.status == 'cancelled' ? 'danger' : 'info'}">${order.status}</span></td>
                                                         <td>${order.orderDate}</td>
                                                         <td><a href="${pageContext.request.contextPath}/admin/orders?action=detail&id=${order.orderId}" class="btn btn-sm btn-outline">View</a></td>
@@ -235,7 +226,7 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 Mobile Accessories Admin. All rights reserved.</p>
+            <p>&copy; 2026 MobileAccessories Admin. All rights reserved.</p>
         </div>
     </footer>
     <script>

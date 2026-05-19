@@ -8,6 +8,7 @@ import com.mobileshop.service.OrderService;
 import com.mobileshop.service.ProductService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.util.List;
  * User-facing Order controller - place orders, view order history.
  * Uses session to store cart items.
  */
+@WebServlet("/orders")
 public class OrderServlet extends HttpServlet {
 
     private final OrderService orderService = new OrderService();

@@ -4,6 +4,7 @@ import com.mobileshop.model.User;
 import com.mobileshop.service.UserService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Admin User controller - manage users, approve registrations.
  */
+@WebServlet("/admin/users")
 public class AdminUserServlet extends HttpServlet {
 
     private final UserService userService = new UserService();

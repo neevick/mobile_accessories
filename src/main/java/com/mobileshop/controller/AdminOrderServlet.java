@@ -5,6 +5,7 @@ import com.mobileshop.model.OrderItem;
 import com.mobileshop.service.OrderService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Admin Order controller - view and manage orders.
  */
+@WebServlet("/admin/orders")
 public class AdminOrderServlet extends HttpServlet {
 
     private final OrderService orderService = new OrderService();

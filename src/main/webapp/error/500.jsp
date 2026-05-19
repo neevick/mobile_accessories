@@ -1,17 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>500 - Server Error | Mobile Accessories</title>
+    <title>500 - Server Error | MobileAccessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/">Home</a></li>
                 <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
@@ -29,7 +29,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories</p></div>
+        <div class="container"><p>&copy; 2026 MobileAccessories</p></div>
     </footer>
 </body>
 </html>

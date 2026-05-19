@@ -4,6 +4,7 @@ import com.mobileshop.model.Product;
 import com.mobileshop.service.ProductService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Home Servlet - Loads featured products for the homepage.
  */
+@WebServlet("/home")
 public class HomeServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();

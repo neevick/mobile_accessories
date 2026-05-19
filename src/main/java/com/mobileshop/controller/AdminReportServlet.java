@@ -5,6 +5,7 @@ import com.mobileshop.service.ProductService;
 import com.mobileshop.service.UserService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import java.util.Map;
 /**
  * Admin reports controller.
  */
+@WebServlet("/admin/reports")
 public class AdminReportServlet extends HttpServlet {
 
     private final OrderService orderService = new OrderService();

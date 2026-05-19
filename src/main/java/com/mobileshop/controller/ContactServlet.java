@@ -4,12 +4,14 @@ import com.mobileshop.model.Contact;
 import com.mobileshop.service.ContactService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
 /**
  * Contact controller - handles contact form submissions.
  */
+@WebServlet("/contact")
 public class ContactServlet extends HttpServlet {
 
     private final ContactService contactService = new ContactService();

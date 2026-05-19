@@ -7,6 +7,7 @@ import com.mobileshop.service.ProductService;
 import com.mobileshop.service.ReviewService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * User-facing Product controller - browse, search, view products.
  */
+@WebServlet("/products")
 public class ProductServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();

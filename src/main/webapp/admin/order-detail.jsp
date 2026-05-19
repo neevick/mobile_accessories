@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -6,20 +6,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order #${order.orderId} - Mobile Accessories Admin</title>
+    <title>Order #${order.orderId} - MobileAccessories Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <nav class="navbar">
+     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
             <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/admin/orders" class="active">Orders</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
                 <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
             </ul>
         </div>
     </nav>
+
 
     <main class="main-content">
         <div class="container">
@@ -63,7 +63,7 @@
                                 <div style="flex:1;min-width:200px">
                                     <p><strong>Shipping Address:</strong> ${order.shippingAddress}</p>
                                     <p><strong>Order Date:</strong> ${order.orderDate}</p>
-                                    <p><strong>Total:</strong> $<fmt:formatNumber value="${order.totalAmount}" pattern="0.00"/></p>
+                                    <p><strong>Total:</strong> Rs. <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/></p>
                                 </div>
                             </div>
                         </div>
@@ -106,16 +106,16 @@
                                         <c:forEach var="item" items="${items}">
                                             <tr>
                                                 <td>${item.productName}</td>
-                                                <td>$<fmt:formatNumber value="${item.price}" pattern="0.00"/></td>
+                                                <td>Rs. <fmt:formatNumber value="${item.price}" pattern="#,##0"/></td>
                                                 <td>${item.quantity}</td>
-                                                <td>$<fmt:formatNumber value="${item.subtotal}" pattern="0.00"/></td>
+                                                <td>Rs. <fmt:formatNumber value="${item.subtotal}" pattern="#,##0"/></td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <td colspan="3" style="text-align:right;font-weight:600">Total</td>
-                                            <td style="font-weight:700;color:var(--primary)">$<fmt:formatNumber value="${order.totalAmount}" pattern="0.00"/></td>
+                                            <td style="font-weight:700;color:var(--primary)">Rs. <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -128,7 +128,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories Admin.</p></div>
+        <div class="container"><p>&copy; 2026 MobileAccessories Admin.</p></div>
     </footer>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>

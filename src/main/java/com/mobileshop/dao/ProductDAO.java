@@ -110,8 +110,10 @@ public class ProductDAO {
             ps.setInt(1, limit);
             rs = ps.executeQuery();
             while (rs.next()) products.add(mapResultSetToProduct(rs));
+            System.out.println("Retrieved " + products.size() + " featured products from database.");
         } catch (SQLException e) {
             System.err.println("Error getting featured products: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             DBUtil.closeAll(rs, ps, conn);
         }

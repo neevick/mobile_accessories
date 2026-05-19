@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Mobile Accessories Online Shop</name>
+    <name>MobileAccessories</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -63,6 +63,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
+                <configuration>
+                    <warName>MobileAccessories</warName>
+                </configuration>
             </plugin>
         </plugins>
     </build>

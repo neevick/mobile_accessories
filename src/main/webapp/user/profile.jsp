@@ -1,25 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Mobile Accessories</title>
+    <title>My Profile - MobileAccessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
-            <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
-                <li><a href="${pageContext.request.contextPath}/orders?action=cart">Cart</a></li>
-                <li><a href="${pageContext.request.contextPath}/profile" class="active">${sessionScope.userName}</a></li>
-                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
+    <jsp:include page="/WEB-INF/includes/navbar.jsp">
+        <jsp:param name="type" value="user"/>
+    </jsp:include>
 
     <main class="main-content">
         <div class="container">
@@ -62,7 +55,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories.</p></div>
+        <div class="container"><p>&copy; 2026 MobileAccessories.</p></div>
     </footer>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>

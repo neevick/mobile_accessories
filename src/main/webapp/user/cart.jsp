@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -6,13 +6,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart - Mobile Accessories</title>
+    <title>Shopping Cart - MobileAccessories</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
             <ul class="navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
                 <li><a href="${pageContext.request.contextPath}/orders?action=cart" class="active">Cart</a></li>
@@ -48,7 +48,7 @@
                             </div>
                             <div class="item-info">
                                 <div class="item-name">${item.productName}</div>
-                                <div class="item-price">$<fmt:formatNumber value="${item.price}" pattern="0.00"/> x ${item.quantity} = $<fmt:formatNumber value="${item.subtotal}" pattern="0.00"/></div>
+                                <div class="item-price">Rs. <fmt:formatNumber value="${item.price}" pattern="#,##0"/> x ${item.quantity} = Rs. <fmt:formatNumber value="${item.subtotal}" pattern="#,##0"/></div>
                             </div>
                             <div class="item-actions">
                                 <form action="${pageContext.request.contextPath}/orders" method="get" class="d-flex gap-1">
@@ -64,7 +64,7 @@
 
                     <div class="card mt-2">
                         <div class="card-body flex-between">
-                            <h2>Total: $<fmt:formatNumber value="${cartTotal}" pattern="0.00"/></h2>
+                            <h2>Total: Rs. <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/></h2>
                             <a href="${pageContext.request.contextPath}/orders?action=checkout" class="btn btn-success btn-lg">Proceed to Checkout</a>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories.</p></div>
+        <div class="container"><p>&copy; 2026 MobileAccessories.</p></div>
     </footer>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>

@@ -1,27 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${empty product ? 'Add' : 'Edit'} Product - Mobile Accessories Admin</title>
+    <title>${empty product ? 'Add' : 'Edit'} Product - MobileAccessories Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="container">
-        <a href="${pageContext.request.contextPath}/" class="navbar-brand">
-            Mobile Accessories
-        </a>
-        <ul class="navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-            <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
-            <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
-        </ul>
-    </div>
-</nav>
+ <nav class="navbar">
+        <div class="container">
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
+            <ul class="navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
+                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
 
 <main class="main-content">
     <div class="container">
@@ -71,8 +69,8 @@
 
                             <div class="d-flex gap-2">
                                 <div class="form-group" style="flex:1">
-                                    <label class="form-label">Price *</label>
-                                    <input type="number" step="0.01" min="0" name="price" class="form-control" value="${product.price}" required>
+                                    <label class="form-label">Price (Rs.) *</label>
+                                    <input type="number" step="1" min="0" name="price" class="form-control" value="${product.price}" required>
                                 </div>
 
                                 <div class="form-group" style="flex:1">
@@ -102,8 +100,27 @@
 
                             <div class="form-group">
                                 <label class="form-label">Product Image</label>
-                                <input type="file" name="image" class="form-control" accept="image/*">
-                                <small class="text-muted">Upload product image</small>
+                                <div class="admin-image-upload">
+                                    <c:if test="${not empty product.image}">
+                                        <div class="current-image-preview mb-2">
+                                            <p class="form-label mb-1">Current image</p>
+                                            <img id="currentProductImage"
+                                                 src="${pageContext.request.contextPath}/resources/images/${product.image}"
+                                                 alt="${product.name}"
+                                                 class="admin-product-thumb">
+                                            <label class="remove-image-label mt-1">
+                                                <input type="checkbox" name="removeImage" id="removeImage">
+                                                Remove current image
+                                            </label>
+                                        </div>
+                                    </c:if>
+                                    <div id="newImagePreview" class="new-image-preview mb-2 hidden">
+                                        <p class="form-label mb-1">New image preview</p>
+                                        <img id="newProductImagePreview" src="" alt="Preview" class="admin-product-thumb">
+                                    </div>
+                                    <input type="file" name="image" id="productImageInput" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">
+                                    <small class="form-text">JPG, PNG, GIF, or WEBP. Shown on product listing and product detail pages.</small>
+                                </div>
                             </div>
 
                             <c:if test="${not empty product}">
@@ -134,10 +151,41 @@
 
 <footer class="footer">
     <div class="container">
-        <p>&copy; 2026 Mobile Accessories Admin.</p>
+        <p>&copy; 2026 MobileAccessories Admin.</p>
     </div>
 </footer>
 
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
+    <script>
+        (function () {
+            var fileInput = document.getElementById('productImageInput');
+            var previewWrap = document.getElementById('newImagePreview');
+            var previewImg = document.getElementById('newProductImagePreview');
+            var removeCheckbox = document.getElementById('removeImage');
+            var currentImg = document.getElementById('currentProductImage');
+
+            if (!fileInput) return;
+
+            fileInput.addEventListener('change', function () {
+                var file = fileInput.files && fileInput.files[0];
+                if (!file) {
+                    previewWrap.classList.add('hidden');
+                    previewImg.removeAttribute('src');
+                    return;
+                }
+                previewImg.src = URL.createObjectURL(file);
+                previewWrap.classList.remove('hidden');
+                if (removeCheckbox) {
+                    removeCheckbox.checked = false;
+                }
+            });
+
+            if (removeCheckbox && currentImg) {
+                removeCheckbox.addEventListener('change', function () {
+                    currentImg.style.opacity = removeCheckbox.checked ? '0.35' : '1';
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

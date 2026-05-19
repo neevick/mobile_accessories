@@ -29,7 +29,16 @@ public class DBUtil {
      * @throws SQLException if connection fails
      */
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+        try {
+            Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+            System.out.println("Database connection established successfully.");
+            return conn;
+        } catch (SQLException e) {
+            System.err.println("Failed to establish database connection.");
+            System.err.println("JDBC URL: " + JDBC_URL);
+            System.err.println("Error: " + e.getMessage());
+            throw e;
+        }
     }
 
     /**

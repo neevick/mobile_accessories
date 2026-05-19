@@ -4,6 +4,7 @@ import com.mobileshop.model.Category;
 import com.mobileshop.service.ProductService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Admin Category controller - CRUD operations for categories.
  */
+@WebServlet("/admin/categories")
 public class AdminCategoryServlet extends HttpServlet {
 
     private final ProductService productService = new ProductService();

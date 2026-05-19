@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -6,20 +6,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Products - Mobile Accessories Admin</title>
+    <title>Manage Products - MobileAccessories Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
-            <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
-                <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
+    <jsp:include page="/WEB-INF/includes/navbar.jsp">
+        <jsp:param name="type" value="admin"/>
+    </jsp:include>
 
     <main class="main-content">
         <div class="container">
@@ -61,6 +54,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>Image</th>
                                                     <th>Name</th>
                                                     <th>Category</th>
                                                     <th>Brand</th>
@@ -74,10 +68,22 @@
                                                 <c:forEach var="product" items="${products}">
                                                     <tr>
                                                         <td>${product.productId}</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty product.image}">
+                                                                    <img src="${pageContext.request.contextPath}/resources/images/${product.image}"
+                                                                         alt="${product.name}"
+                                                                         class="admin-product-thumb admin-product-thumb--table">
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">No image</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
                                                         <td>${product.name}</td>
                                                         <td>${product.categoryName}</td>
                                                         <td>${product.brand}</td>
-                                                        <td>$<fmt:formatNumber value="${product.price}" pattern="0.00"/></td>
+                                                        <td>Rs. <fmt:formatNumber value="${product.price}" pattern="#,##0"/></td>
                                                         <td>${product.stock}</td>
                                                         <td><span class="badge badge-${product.status == 'active' ? 'success' : 'danger'}">${product.status}</span></td>
                                                         <td>
@@ -102,7 +108,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container"><p>&copy; 2026 Mobile Accessories Admin.</p></div>
+        <div class="container"><p>&copy; 2026 MobileAccessories Admin.</p></div>
     </footer>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>

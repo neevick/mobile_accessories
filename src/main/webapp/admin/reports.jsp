@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -6,21 +6,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports & Analytics - Mobile Accessories Admin</title>
+    <title>Reports & Analytics - MobileAccessories Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=5">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav class="navbar">
+     <nav class="navbar">
         <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">Mobile Accessories</a>
+            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
             <ul class="navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/dashboard" class="active">Dashboard</a></li>
                 <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
             </ul>
         </div>
     </nav>
+
 
     <main class="main-content">
         <div class="container">
@@ -53,7 +53,7 @@
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-info">
-                                <div class="stat-value">Rs <fmt:formatNumber value="${totalRevenue}" pattern="0.00"/></div>
+                                <div class="stat-value">Rs. <fmt:formatNumber value="${totalRevenue}" pattern="#,##0"/></div>
                                 <div class="stat-label">Sale Revenue</div>
                             </div>
                         </div>
