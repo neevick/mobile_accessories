@@ -21,12 +21,12 @@
             <div class="hero-buttons">
                    <!-- Browse Products -->
                    <a href="${pageContext.request.contextPath}/products"
-                      class="btn-primary">
+                      class="btn">
                        Browse Products
                    </a>
                    <!-- Contact -->
                    <a href="${pageContext.request.contextPath}/contact"
-                      class="btn-secondary">
+                      class="btn btn-secondary">
                        Talk to Us
                    </a>
                </div>
