@@ -75,7 +75,7 @@ public class CategoryDAO {
 
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
-        String sql = "SELECT * FROM categories ORDER BY name";
+        String sql = "SELECT * FROM categories ORDER BY category_id";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
