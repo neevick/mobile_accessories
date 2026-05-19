@@ -41,7 +41,8 @@
                             <div class="item-image">
                                 <c:choose>
                                     <c:when test="${not empty item.productImage}">
-                                        <img src="${pageContext.request.contextPath}/resources/images/${item.productImage}" alt="${item.productName}" style="width:100%;height:100%;object-fit:cover;">
+                                        <c:url var="productImageUrl" value="/resources/images/${item.productImage}" />
+                                        <img src="${productImageUrl}" alt="${item.productName}" style="width:100%;height:100%;object-fit:cover;">
                                     </c:when>
                                     <c:otherwise>&#128241;</c:otherwise>
                                 </c:choose>

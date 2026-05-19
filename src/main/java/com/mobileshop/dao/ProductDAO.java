@@ -210,7 +210,7 @@ public class ProductDAO {
                         rs.getString("brand"),
                         contextRealPath);
 
-                // Update old UUID image names to the real file name in resources/images.
+                // Keep the database image column aligned with resources/images filenames.
                 if (resolvedImage != null && !resolvedImage.equals(currentImage)) {
                     updatePs.setString(1, resolvedImage);
                     updatePs.setInt(2, productId);
@@ -361,7 +361,8 @@ public class ProductDAO {
         product.setStock(rs.getInt("stock"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setBrand(rs.getString("brand"));
-        product.setImage(ImageUtil.resolveProductImage(rs.getString("image"), product.getName(), product.getBrand()));
+        String image = ImageUtil.resolveProductImage(rs.getString("image"), product.getName(), product.getBrand());
+        product.setImage(image);
         product.setStatus(rs.getString("status"));
         product.setCreatedAt(rs.getTimestamp("created_at"));
         product.setUpdatedAt(rs.getTimestamp("updated_at"));
