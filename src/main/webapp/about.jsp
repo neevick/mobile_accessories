@@ -17,6 +17,21 @@
     <main class="main-content">
         <div class="container">
             <h1 class="mb-2">About MobileAccessories</h1>
+            
+            <div class="hero-buttons">
+                   <!-- Browse Products -->
+                   <a href="${pageContext.request.contextPath}/products"
+                      class="btn-primary">
+                       Browse Products
+                   </a>
+                   <!-- Contact -->
+                   <a href="${pageContext.request.contextPath}/contact"
+                      class="btn-secondary">
+                       Talk to Us
+                   </a>
+               </div>
+
+            
 
             <div class="card mb-3">
                 <div class="card-body">
