@@ -10,20 +10,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a href="${pageContext.request.contextPath}/" class="navbar-brand">MobileAccessories</a>
-            <button class="navbar-toggle" onclick="toggleNav()">&#9776;</button>
-            <ul class="navbar-nav" id="navbarNav">
-                <li><a href="${pageContext.request.contextPath}/">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/products" class="active">Products</a></li>
-                <c:if test="${not empty sessionScope.user}">
-                    <li><a href="${pageContext.request.contextPath}/orders?action=cart">Cart</a></li>
-                    <li><a href="${pageContext.request.contextPath}/auth?action=logout" class="logout-link">Logout</a></li>
-                </c:if>
-            </ul>
-        </div>
-    </nav>
+      <jsp:include page="/WEB-INF/includes/navbar.jsp">
+        <jsp:param name="type" value="user"/>
+    </jsp:include>
 
     <main class="main-content">
         <div class="container">
