@@ -20,7 +20,9 @@ public class HomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
+        String contextPath = request.getServletContext().getRealPath("/");
+        ImageUtil.syncImagesToRuntime(contextPath);
+        productService.syncProductImages(contextPath);
         // Load featured products (latest 4 active products)
         List<Product> featuredProducts = productService.getFeaturedProducts(4);
         request.setAttribute("featuredProducts", featuredProducts);

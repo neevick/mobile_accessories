@@ -56,7 +56,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
+        syncProductImages(request);
         List<Product> products = productService.getActiveProducts();
         List<Category> categories = productService.getActiveCategories();
         request.setAttribute("products", products);
@@ -65,7 +65,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void showDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
+        syncProductImages(request);
         Integer id = parseInt(request.getParameter("id"));
         if (id == null) {
             response.sendRedirect(request.getContextPath() + "/products");
@@ -86,7 +86,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void searchProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
+        syncProductImages(request);
         String keyword = request.getParameter("keyword");
         List<Product> products = productService.searchProducts(keyword);
         List<Category> categories = productService.getActiveCategories();
@@ -97,7 +97,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void listByCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ImageUtil.syncImagesToRuntime(request.getServletContext().getRealPath("/"));
+        syncProductImages(request);
         Integer categoryId = parseInt(request.getParameter("id"));
         if (categoryId == null) {
             response.sendRedirect(request.getContextPath() + "/products");
@@ -141,5 +141,11 @@ public class ProductServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    private void syncProductImages(HttpServletRequest request) {
+        String contextPath = request.getServletContext().getRealPath("/");
+        ImageUtil.syncImagesToRuntime(contextPath);
+        productService.syncProductImages(contextPath);
     }
 }

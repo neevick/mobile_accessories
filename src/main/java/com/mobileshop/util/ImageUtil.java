@@ -160,8 +160,17 @@ public class ImageUtil {
     }
 
     public static String resolveProductImage(String imageFileName, String productName, String brand) {
+        return resolveProductImage(imageFileName, productName, brand, null);
+    }
+
+    public static String resolveProductImage(String imageFileName, String productName, String brand, String contextRealPath) {
         if (imageFileName == null || imageFileName.trim().isEmpty()) {
             return null;
+        }
+
+        Path runtimeImageDir = getRuntimeImageDirectory(contextRealPath);
+        if (Files.isRegularFile(runtimeImageDir.resolve(imageFileName))) {
+            return imageFileName;
         }
 
         Path sourceImageDir = getSourceImageDirectory(null);
@@ -169,7 +178,12 @@ public class ImageUtil {
             return imageFileName;
         }
 
-        String matchedFileName = findMatchingImageFile(sourceImageDir, productName, brand);
+        String matchedFileName = findMatchingImageFile(runtimeImageDir, productName, brand);
+        if (matchedFileName != null) {
+            return matchedFileName;
+        }
+
+        matchedFileName = findMatchingImageFile(sourceImageDir, productName, brand);
         if (matchedFileName != null) {
             return matchedFileName;
         }
