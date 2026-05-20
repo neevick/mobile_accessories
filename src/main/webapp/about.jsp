@@ -37,9 +37,31 @@
                 <div class="card-body">
                     <h2>Who We Are</h2>
                     <p class="mt-1">MobileAccessories is a premier online destination for mobile accessories, committed to providing high-quality products at competitive prices. We believe that every mobile device deserves the best accessories to enhance its functionality and protect its value.</p>
-
+                    <p>
+   					 Our platform offers a wide range of products including phone
+    				cases, chargers, screen protectors, earphones, power banks,
+   					 and other modern mobile accessories designed to meet the needs
+    				of today’s technology users. We carefully select our products
+   				    to ensure durability, quality, and customer satisfaction.
+					</p>
+					<p>
+    				At MobileAccessories, we focus on delivering an easy, secure,
+    				and convenient online shopping experience for customers across
+    				Nepal. Our team is committed to professional customer service,
+    				fast delivery, and continuous improvement to meet changing
+    				market trends and customer expectations.
+					</p>
+					
+                    
+ 
                     <h2 class="mt-3">Our Mission</h2>
-                    <p class="mt-1">Our mission is to make quality mobile accessories accessible to everyone. We carefully curate our product selection to ensure only genuine, high-quality items from trusted brands reach our customers.</p>
+                    <p class="mt-1">Our mission is to make quality mobile accessories accessible to everyone. We carefully curate our product selection to ensure only genuine,
+                     high-quality items from trusted brands reach our customers.
+                     In the future, MobileAccessories plans to expand its product
+                     collection with the latest technology accessories while maintaining
+                     affordable prices and excellent service standards. We also aim to
+                     support innovation, digital growth, and customer convenience
+                     through continuous improvement and modern e-commerce solutions.</p>
 
                     <h2 class="mt-3">What We Offer</h2>
                     <ul class="mt-1" style="padding-left:1.5rem">
@@ -84,7 +106,30 @@
                     </div>
 
                     <h2 class="mt-3">Our Commitment to Ethics</h2>
-                    <p class="mt-1">As a responsible e-commerce platform, MobileAccessories is committed to ethical business practices. We ensure fair pricing, transparent product descriptions, and honest customer reviews. We do not engage in deceptive marketing practices and prioritize customer satisfaction above all.</p>
+                    <p class="mt-1">As a responsible e-commerce platform, MobileAccessories is committed to ethical business practices. 
+                    We ensure fair pricing, transparent product descriptions, 
+                    and honest customer reviews. We do not engage in deceptive 
+                    marketing practices and prioritize customer satisfaction above all.</p>
+                    <p> We do not engage in deceptive marketing practices, misleading
+                     advertisements, or hidden charges. Every product displayed on
+                     our platform is carefully verified to maintain quality,
+                     authenticity, and customer satisfaction.
+                     </p>
+                     <p>
+    				Our company values honesty, integrity, and accountability in
+    				every business operation. We respect customer privacy, provide
+    				secure online transactions, and work continuously to improve
+    				user experience through reliable support and professional service.
+					</p>
+
+					<p>
+    				MobileAccessories also believes in building long-term relationships
+    				with customers by delivering high-quality products, fast delivery
+   					services, and responsive customer care. Our mission is not only
+    				to sell mobile accessories but also to create a trustworthy and
+    				ethical online shopping environment for customers across Nepal.
+					</p>
+                    
                 </div>
             </div>
         </div>
