@@ -38,9 +38,9 @@
                         <div>
                             <h1>Contact Us</h1>
                             <div class="decorative-lines">
-                                <div></div>
-                                <div></div>
-                                <div></div>
+                            We’re here to help! Whether you have a question about our products, 
+                            need assistance with an order, or just want to share some feedback, please feel free to reach out.
+                             Our team is dedicated to providing you with the best service possible.
                             </div>
                         </div>
                         <div class="contact-info-items">
