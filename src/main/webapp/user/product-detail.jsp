@@ -11,7 +11,7 @@
 </head>
 <body>
       <jsp:include page="/WEB-INF/includes/navbar.jsp">
-        <jsp:param name="type" value="user"/>
+        <jsp:param name="type" value=""/>
     </jsp:include>
 
     <main class="main-content">
@@ -151,7 +151,7 @@
     </main>
 
         <jsp:include page="/WEB-INF/includes/footer.jsp">
-        <jsp:param name="type" value="simple"/>
+        <jsp:param name="type" value="public"/>
     </jsp:include>
 
     <script>

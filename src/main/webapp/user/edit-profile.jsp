@@ -58,7 +58,7 @@
     </main>
 
         <jsp:include page="/WEB-INF/includes/footer.jsp">
-        <jsp:param name="type" value="simple"/>
+        <jsp:param name="type" value="public"/>
     </jsp:include>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
