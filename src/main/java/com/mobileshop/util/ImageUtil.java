@@ -37,18 +37,20 @@ public class ImageUtil {
         try {
             Path runtimeImageDir = getRuntimeImageDirectory(contextRealPath);
             Path sourceImageDir = getSourceImageDirectory(contextRealPath);
-            if (sourceImageDir == null) {
-                System.err.println("Could not save image because src/main/webapp/resources/images was not found.");
-                return null;
-            }
             Files.createDirectories(runtimeImageDir);
-            Files.createDirectories(sourceImageDir);
+            if (sourceImageDir != null) {
+                Files.createDirectories(sourceImageDir);
+            }
             String fileName = buildImageFileName(originalFileName, productName, brand, extension, runtimeImageDir, sourceImageDir, replaceableFileName);
             Path targetPath = runtimeImageDir.resolve(fileName);
             Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
-            copyToSourceImageDirectory(targetPath, fileName, sourceImageDir);
             System.out.println("Image saved successfully: " + targetPath);
-            System.out.println("Image copied to source resources folder: " + sourceImageDir.resolve(fileName));
+            if (sourceImageDir != null) {
+                copyToSourceImageDirectory(targetPath, fileName, sourceImageDir);
+                System.out.println("Image copied to source resources folder: " + sourceImageDir.resolve(fileName));
+            } else {
+                System.out.println("Source image directory was not found; image saved to runtime folder only.");
+            }
             return fileName;
         } catch (IOException e) {
             System.err.println("Error saving image: " + e.getMessage());
