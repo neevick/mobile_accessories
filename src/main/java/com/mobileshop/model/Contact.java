@@ -11,6 +11,8 @@ public class Contact {
     private String email;
     private String subject;
     private String message;
+    private String phone;
+    private String address;
     private Timestamp createdAt;
 
     public Contact() {}
@@ -20,6 +22,15 @@ public class Contact {
         this.email = email;
         this.subject = subject;
         this.message = message;
+    }
+
+    public Contact(String name, String email, String subject, String message, String phone, String address) {
+        this.name = name;
+        this.email = email;
+        this.subject = subject;
+        this.message = message;
+        this.phone = phone;
+        this.address = address;
     }
 
     public int getContactId() { return contactId; }
@@ -36,6 +47,12 @@ public class Contact {
 
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }

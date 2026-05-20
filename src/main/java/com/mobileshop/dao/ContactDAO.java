@@ -12,8 +12,18 @@ import java.util.List;
  */
 public class ContactDAO {
 
+    static {
+        try (Connection conn = DBUtil.getConnection();
+             Statement stmt = conn.createStatement()) {
+            try { stmt.executeUpdate("ALTER TABLE contacts ADD COLUMN phone VARCHAR(30) NULL"); } catch (Exception ignored) {}
+            try { stmt.executeUpdate("ALTER TABLE contacts ADD COLUMN address VARCHAR(255) NULL"); } catch (Exception ignored) {}
+        } catch (Exception e) {
+            System.err.println("Database migration failed: " + e.getMessage());
+        }
+    }
+
     public int createContact(Contact contact) {
-        String sql = "INSERT INTO contacts (name, email, subject, message) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO contacts (name, email, subject, message, phone, address) VALUES (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -24,6 +34,8 @@ public class ContactDAO {
             ps.setString(2, contact.getEmail());
             ps.setString(3, contact.getSubject());
             ps.setString(4, contact.getMessage());
+            ps.setString(5, contact.getPhone());
+            ps.setString(6, contact.getAddress());
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
                 rs = ps.getGeneratedKeys();
@@ -63,6 +75,11 @@ public class ContactDAO {
         contact.setEmail(rs.getString("email"));
         contact.setSubject(rs.getString("subject"));
         contact.setMessage(rs.getString("message"));
+        
+        // Map new fields
+        try { contact.setPhone(rs.getString("phone")); } catch (SQLException ignored) {}
+        try { contact.setAddress(rs.getString("address")); } catch (SQLException ignored) {}
+        
         contact.setCreatedAt(rs.getTimestamp("created_at"));
         return contact;
     }

@@ -44,6 +44,32 @@ public class ContactService {
         return null;
     }
 
+    public Contact submitContact(String name, String email, String phone, String address, String message, StringBuilder errorMsg) {
+        if (ValidationUtil.isNullOrEmpty(name)) {
+            errorMsg.append("Name is required.");
+            return null;
+        }
+        if (!ValidationUtil.isValidEmail(email)) {
+            errorMsg.append("Please enter a valid email address.");
+            return null;
+        }
+        if (ValidationUtil.isNullOrEmpty(message)) {
+            errorMsg.append("Message is required.");
+            return null;
+        }
+        
+        String subject = "Contact Inquiry from " + name;
+
+        Contact contact = new Contact(name, email, subject, message, phone, address);
+        int id = contactDAO.createContact(contact);
+        if (id > 0) {
+            contact.setContactId(id);
+            return contact;
+        }
+        errorMsg.append("Failed to submit contact form. Please try again.");
+        return null;
+    }
+
     public List<Contact> getAllContacts() {
         return contactDAO.getAllContacts();
     }

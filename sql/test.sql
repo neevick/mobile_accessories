@@ -83,6 +83,8 @@ CREATE TABLE `contacts` (
   `email` varchar(100) NOT NULL,
   `subject` varchar(200) NOT NULL,
   `message` text NOT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

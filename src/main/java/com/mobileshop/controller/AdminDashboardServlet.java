@@ -5,7 +5,6 @@ import com.mobileshop.model.Order;
 import com.mobileshop.service.OrderService;
 import com.mobileshop.service.ProductService;
 import com.mobileshop.service.UserService;
-import com.mobileshop.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,9 +25,7 @@ public class AdminDashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String contextPath = request.getServletContext().getRealPath("/");
-        ImageUtil.syncImagesToRuntime(contextPath);
-        productService.syncProductImages(contextPath);
+
 
         // Dashboard statistics
         int totalProducts = productService.countProducts();

@@ -2,7 +2,6 @@ package com.mobileshop.controller;
 
 import com.mobileshop.model.Product;
 import com.mobileshop.service.ProductService;
-import com.mobileshop.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,12 +19,10 @@ public class HomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String contextPath = request.getServletContext().getRealPath("/");
-        ImageUtil.syncImagesToRuntime(contextPath);
-        productService.syncProductImages(contextPath);
         // Load featured products (latest 4 active products)
         List<Product> featuredProducts = productService.getFeaturedProducts(4);
         request.setAttribute("featuredProducts", featuredProducts);
+        request.setAttribute("homeLoaded", true);
 
         // Forward to index.jsp
         request.getRequestDispatcher("/index.jsp").forward(request, response);

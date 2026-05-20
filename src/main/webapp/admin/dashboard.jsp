@@ -224,11 +224,9 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 MobileAccessories Admin. All rights reserved.</p>
-        </div>
-    </footer>
+        <jsp:include page="/WEB-INF/includes/footer.jsp">
+        <jsp:param name="type" value="admin"/>
+    </jsp:include>
     <script>
         const latestDailyLabels = [
             <c:forEach var="entry" items="${latestDailyOrders}" varStatus="st">

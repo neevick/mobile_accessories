@@ -361,8 +361,7 @@ public class ProductDAO {
         product.setStock(rs.getInt("stock"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setBrand(rs.getString("brand"));
-        String image = ImageUtil.resolveProductImage(rs.getString("image"), product.getName(), product.getBrand());
-        product.setImage(image);
+        product.setImage(rs.getString("image"));
         product.setStatus(rs.getString("status"));
         product.setCreatedAt(rs.getTimestamp("created_at"));
         product.setUpdatedAt(rs.getTimestamp("updated_at"));

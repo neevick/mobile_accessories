@@ -33,7 +33,7 @@
                     <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
                 </c:when>
                 <c:otherwise>
-                    <li><a href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+                    <li><a href="${pageContext.request.contextPath}/">Home</a></li>
                     <li><a href="${pageContext.request.contextPath}/products">Products</a></li>
                     <li><a href="${pageContext.request.contextPath}/about.jsp">About</a></li>
                     <li><a href="${pageContext.request.contextPath}/contact">Contact</a></li>

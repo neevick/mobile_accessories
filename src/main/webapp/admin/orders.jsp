@@ -91,9 +91,9 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="container"><p>&copy; 2026 MobileAccessories Admin.</p></div>
-    </footer>
+        <jsp:include page="/WEB-INF/includes/footer.jsp">
+        <jsp:param name="type" value="admin"/>
+    </jsp:include>
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>
