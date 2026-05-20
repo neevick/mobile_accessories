@@ -906,10 +906,7 @@ tr:hover { background: var(--primary-light); }
     gap: 0.5rem;
     margin: 1.25rem 0;
 }
-.decorative-lines div {
-    height: 0;
-    border-top: 2px dashed rgba(255, 255, 255, 0.45);
-}
+
 
 /* Contact info items */
 .contact-info-items {
