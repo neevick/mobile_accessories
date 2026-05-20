@@ -100,7 +100,14 @@ public class OrderServlet extends HttpServlet {
     }
 
     private void addToCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
+        int productId;
+        try {
+            productId = Integer.parseInt(request.getParameter("productId"));
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("error", "Invalid product ID.");
+            response.sendRedirect(request.getContextPath() + "/products");
+            return;
+        }
         int quantity = 1;
         try { quantity = Integer.parseInt(request.getParameter("quantity")); } catch (NumberFormatException e) { quantity = 1; }
         if (quantity < 1) quantity = 1;
@@ -126,11 +133,23 @@ public class OrderServlet extends HttpServlet {
         } else {
             session.setAttribute("error", "Failed to add product to cart.");
         }
-        response.sendRedirect(request.getContextPath() + "/products?action=detail&id=" + productId);
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isEmpty()) {
+            response.sendRedirect(referer);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/products");
+        }
     }
 
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
+        int productId;
+        try {
+            productId = Integer.parseInt(request.getParameter("productId"));
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("error", "Invalid product ID.");
+            response.sendRedirect(request.getContextPath() + "/orders?action=cart");
+            return;
+        }
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userId");
         
@@ -139,12 +158,44 @@ public class OrderServlet extends HttpServlet {
     }
 
     private void updateCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        int productId;
+        try {
+            productId = Integer.parseInt(request.getParameter("productId"));
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("error", "Invalid product ID.");
+            response.sendRedirect(request.getContextPath() + "/orders?action=cart");
+            return;
+        }
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userId");
         
-        cartService.updateCartItem(userId, productId, quantity);
+        int quantity;
+        try {
+            quantity = Integer.parseInt(request.getParameter("quantity"));
+        } catch (NumberFormatException e) {
+            session.setAttribute("error", "Please enter a valid quantity number.");
+            response.sendRedirect(request.getContextPath() + "/orders?action=cart");
+            return;
+        }
+
+        Product product = productService.getProductById(productId);
+        if (product == null) {
+            session.setAttribute("error", "Product not found.");
+            response.sendRedirect(request.getContextPath() + "/orders?action=cart");
+            return;
+        }
+
+        if (quantity <= 0) {
+            cartService.removeFromCart(userId, productId);
+            session.setAttribute("success", "Item removed from cart.");
+        } else if (quantity > product.getStock()) {
+            cartService.updateCartItem(userId, productId, product.getStock());
+            session.setAttribute("error", "Requested quantity exceeds stock. Adjusted to maximum available (" + product.getStock() + ").");
+        } else {
+            cartService.updateCartItem(userId, productId, quantity);
+            session.setAttribute("success", "Cart item updated successfully.");
+        }
+        
         response.sendRedirect(request.getContextPath() + "/orders?action=cart");
     }
 
@@ -198,7 +249,14 @@ public class OrderServlet extends HttpServlet {
     }
 
     private void orderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("error", "Invalid order ID.");
+            response.sendRedirect(request.getContextPath() + "/orders?action=history");
+            return;
+        }
         Order order = orderService.getOrderById(id);
         if (order == null) {
             response.sendRedirect(request.getContextPath() + "/orders?action=history");

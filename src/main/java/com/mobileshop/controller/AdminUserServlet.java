@@ -104,7 +104,13 @@ public class AdminUserServlet extends HttpServlet {
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        int id = Integer.parseInt(request.getParameter("id"));
+        Integer id = parseInt(request.getParameter("id"));
+
+        if (id == null) {
+            request.getSession().setAttribute("error", "Invalid user ID.");
+            response.sendRedirect(request.getContextPath() + "/admin/users");
+            return;
+        }
 
         if (userService.deleteUser(id)) {
             request.getSession().setAttribute("success", "User deleted successfully!");
@@ -155,8 +161,29 @@ public class AdminUserServlet extends HttpServlet {
         String phone = trim(request.getParameter("phone"));
         String role = trim(request.getParameter("role"));
 
-        if (username.isEmpty()) errorMsg.append("Username is required. ");
-        if (email.isEmpty()) errorMsg.append("Email is required. ");
+        if (com.mobileshop.util.ValidationUtil.isNullOrEmpty(username)) {
+            errorMsg.append("Username is required. ");
+        } else if (!com.mobileshop.util.ValidationUtil.isValidUsername(username)) {
+            errorMsg.append("Username must be 3-50 characters (letters, numbers, underscores only). ");
+        }
+        
+        if (com.mobileshop.util.ValidationUtil.isNullOrEmpty(email)) {
+            errorMsg.append("Email is required. ");
+        } else if (!com.mobileshop.util.ValidationUtil.isValidEmail(email)) {
+            errorMsg.append("Please enter a valid email address. ");
+        }
+
+        if (com.mobileshop.util.ValidationUtil.isNullOrEmpty(fullName)) {
+            errorMsg.append("Full name is required. ");
+        } else if (!com.mobileshop.util.ValidationUtil.isValidName(fullName)) {
+            errorMsg.append("Full name must contain only letters and spaces (2-100 characters). ");
+        }
+
+        if (com.mobileshop.util.ValidationUtil.isNullOrEmpty(phone)) {
+            errorMsg.append("Phone number is required. ");
+        } else if (!com.mobileshop.util.ValidationUtil.isValidPhone(phone)) {
+            errorMsg.append("Phone number must be 10-15 digits. ");
+        }
 
         if (errorMsg.length() > 0) return null;
 

@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -17,6 +17,19 @@
     <main class="main-content">
         <div class="container">
             <h1 class="mb-2">${not empty currentCategory ? currentCategory.name : not empty keyword ? 'Search Results' : 'All Products'}</h1>
+
+            <c:if test="${not empty sessionScope.success}">
+                <div class="alert alert-success" style="margin-bottom: 20px; border-radius: 8px;">
+                    ${sessionScope.success}
+                    <c:remove var="success" scope="session"/>
+                </div>
+            </c:if>
+            <c:if test="${not empty sessionScope.error}">
+                <div class="alert alert-danger" style="margin-bottom: 20px; border-radius: 8px;">
+                    ${sessionScope.error}
+                    <c:remove var="error" scope="session"/>
+                </div>
+            </c:if>
 
             <!-- Search -->
             <form action="${pageContext.request.contextPath}/products" method="get" class="search-bar">

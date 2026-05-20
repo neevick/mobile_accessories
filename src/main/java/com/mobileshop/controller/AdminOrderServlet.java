@@ -69,9 +69,15 @@ public class AdminOrderServlet extends HttpServlet {
     }
 
     private void showDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        Integer id = parseInt(request.getParameter("id"));
+        if (id == null) {
+            request.getSession().setAttribute("error", "Invalid order ID.");
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
         Order order = orderService.getOrderById(id);
         if (order == null) {
+            request.getSession().setAttribute("error", "Order not found.");
             response.sendRedirect(request.getContextPath() + "/admin/orders");
             return;
         }
@@ -82,7 +88,12 @@ public class AdminOrderServlet extends HttpServlet {
     }
 
     private void updateStatus(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        Integer orderId = parseInt(request.getParameter("orderId"));
+        if (orderId == null) {
+            request.getSession().setAttribute("error", "Invalid order ID.");
+            response.sendRedirect(request.getContextPath() + "/admin/orders");
+            return;
+        }
         String status = request.getParameter("status");
         if (orderService.updateOrderStatus(orderId, status)) {
             request.getSession().setAttribute("success", "Order status updated to: " + status);
@@ -90,5 +101,13 @@ public class AdminOrderServlet extends HttpServlet {
             request.getSession().setAttribute("error", "Failed to update order status.");
         }
         response.sendRedirect(request.getContextPath() + "/admin/orders?action=detail&id=" + orderId);
+    }
+
+    private Integer parseInt(String value) {
+        try {
+            return value == null ? null : Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

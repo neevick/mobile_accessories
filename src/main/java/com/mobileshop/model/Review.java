@@ -45,6 +45,10 @@ public class Review {
     public String getUserName() { return userName; }
     public void setUserName(String userName) { this.userName = userName; }
 
+    private String productName;
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
+
     @Override
     public String toString() {
         return "Review{reviewId=" + reviewId + ", userId=" + userId + ", productId=" + productId + ", rating=" + rating + "}";

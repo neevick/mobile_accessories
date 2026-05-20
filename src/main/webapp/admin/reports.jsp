@@ -25,17 +25,7 @@
     <main class="main-content">
         <div class="container">
             <div class="admin-layout">
-                <aside class="admin-sidebar">
-                    <div class="sidebar-header">Admin Panel</div>
-                    <ul class="sidebar-nav">
-                        <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/products">Products</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/reports" class="active">Reports & Analytics</a></li>
-                    </ul>
-                </aside>
+                                <jsp:include page="/WEB-INF/includes/admin-sidebar.jsp" />
 
                 <div class="admin-content">
                     <div class="flex-between mb-2">
@@ -368,3 +358,4 @@
     <script src="${pageContext.request.contextPath}/js/logout-confirm.js?v=4"></script>
 </body>
 </html>
+

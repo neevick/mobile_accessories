@@ -131,8 +131,31 @@ public class ProfileServlet extends HttpServlet {
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
 
-            if (email == null || email.trim().isEmpty() || fullName == null || fullName.trim().isEmpty() || phone == null || phone.trim().isEmpty()) {
+            if (com.mobileshop.util.ValidationUtil.isNullOrEmpty(email) || 
+                com.mobileshop.util.ValidationUtil.isNullOrEmpty(fullName) || 
+                com.mobileshop.util.ValidationUtil.isNullOrEmpty(phone)) {
                 request.setAttribute("error", "Email, full name, and phone are required.");
+                request.setAttribute("profileUser", user);
+                request.getRequestDispatcher("/user/edit-profile.jsp").forward(request, response);
+                return;
+            }
+
+            if (!com.mobileshop.util.ValidationUtil.isValidEmail(email)) {
+                request.setAttribute("error", "Please enter a valid email address.");
+                request.setAttribute("profileUser", user);
+                request.getRequestDispatcher("/user/edit-profile.jsp").forward(request, response);
+                return;
+            }
+
+            if (!com.mobileshop.util.ValidationUtil.isValidName(fullName)) {
+                request.setAttribute("error", "Full name must contain only letters and spaces (2-100 characters).");
+                request.setAttribute("profileUser", user);
+                request.getRequestDispatcher("/user/edit-profile.jsp").forward(request, response);
+                return;
+            }
+
+            if (!com.mobileshop.util.ValidationUtil.isValidPhone(phone)) {
+                request.setAttribute("error", "Phone number must be 10-15 digits.");
                 request.setAttribute("profileUser", user);
                 request.getRequestDispatcher("/user/edit-profile.jsp").forward(request, response);
                 return;

@@ -40,6 +40,10 @@ public class ReviewService {
         return reviewDAO.getReviewsByProductId(productId);
     }
 
+    public List<Review> getAllReviews() {
+        return reviewDAO.getAllReviews();
+    }
+
     public double getAverageRating(int productId) {
         return reviewDAO.getAverageRating(productId);
     }

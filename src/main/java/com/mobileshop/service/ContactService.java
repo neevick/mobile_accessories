@@ -53,6 +53,10 @@ public class ContactService {
             errorMsg.append("Please enter a valid email address.");
             return null;
         }
+        if (!ValidationUtil.isNullOrEmpty(phone) && !ValidationUtil.isValidPhone(phone)) {
+            errorMsg.append("Phone number must be 10-15 digits.");
+            return null;
+        }
         if (ValidationUtil.isNullOrEmpty(message)) {
             errorMsg.append("Message is required.");
             return null;

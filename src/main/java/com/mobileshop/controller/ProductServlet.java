@@ -116,9 +116,22 @@ public class ProductServlet extends HttpServlet {
         }
 
         int userId = (int) session.getAttribute("userId");
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int rating = Integer.parseInt(request.getParameter("rating"));
         String comment = request.getParameter("comment");
+        int productId;
+        int rating;
+        try {
+            productId = Integer.parseInt(request.getParameter("productId"));
+            rating = Integer.parseInt(request.getParameter("rating"));
+        } catch (NumberFormatException e) {
+            request.getSession().setAttribute("error", "Invalid product or rating value. Rating must be 1-5.");
+            String prodIdStr = request.getParameter("productId");
+            if (prodIdStr != null && prodIdStr.matches("\\d+")) {
+                response.sendRedirect(request.getContextPath() + "/products?action=detail&id=" + prodIdStr);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/products");
+            }
+            return;
+        }
 
         StringBuilder errorMsg = new StringBuilder();
         Review review = reviewService.createReview(userId, productId, rating, comment, errorMsg);

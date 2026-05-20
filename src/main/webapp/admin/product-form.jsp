@@ -25,18 +25,7 @@
     <div class="container">
         <div class="admin-layout">
 
-            <aside class="admin-sidebar">
-                <div class="sidebar-header">Admin Panel</div>
-                <ul class="sidebar-nav">
-                    <li><a href="${pageContext.request.contextPath}/admin/dashboard">Dashboard</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/products" class="active">Products</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/categories">Categories</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/orders">Orders</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/users">Users</a></li>
-                    <li><a href="${pageContext.request.contextPath}/admin/reports">Reports & Analytics</a></li>
-                   
-                </ul>
-            </aside>
+                            <jsp:include page="/WEB-INF/includes/admin-sidebar.jsp" />
 
             <div class="admin-content">
                 <h1 class="mb-2">${empty product ? 'Add New Product' : 'Edit Product'}</h1>
@@ -188,3 +177,4 @@
     </script>
 </body>
 </html>
+

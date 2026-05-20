@@ -13,7 +13,8 @@
     
     <!-- Style Sheets -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=4">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/contactUs.css?v=4">
+
+
 </head>
 <body>
 
@@ -33,22 +34,25 @@
             <div class="contact-container">
                 <!-- Left Side Panel -->
                 <div class="left-panel">
-                    <h1>Contact Us</h1>
-                    
-                    <div class="decorative-lines">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-
-                    <div class="contact-info-item">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span>info@Mobileaccessories.com</span>
-                    </div>
-                    
-                    <div class="contact-info-item">
-                        <i class="fa-solid fa-phone-volume"></i>
-                        <span>Support: (+21) 123 456 586</span>
+                    <div class="left-panel-content">
+                        <div>
+                            <h1>Contact Us</h1>
+                            <div class="decorative-lines">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <div class="contact-info-items">
+                            <div class="contact-info-item">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span>info@Mobileaccessories.com</span>
+                            </div>
+                            <div class="contact-info-item">
+                                <i class="fa-solid fa-phone-volume"></i>
+                                <span>Support: +977 9800000000</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -58,35 +62,40 @@
                     <p class="subtitle">Let's get in touch</p>
 
                     <form action="${pageContext.request.contextPath}/contact" method="POST">
-                        
+
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="fullName">Full Name *</label>
-                                <input type="text" id="fullName" name="fullName" value="${contactName}" required>
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" value="${contactName}" required class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" value="${contactEmail}" required>
+                                <label for="company">Company</label>
+                                <input type="text" id="company" name="company" value="${contactCompany}" class="form-control">
                             </div>
                         </div>
 
                         <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" value="${contactEmail}" required class="form-control">
+                            </div>
                             <div class="form-group">
                                 <label for="phone">Phone number</label>
-                                <input type="tel" id="phone" name="phone" value="${contactPhone}">
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Address</label>
-                                <input type="text" id="address" name="address" value="${contactAddress}">
+                                <input type="tel" id="phone" name="phone" value="${contactPhone}" class="form-control">
                             </div>
                         </div>
 
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label for="message">Your Message *</label>
-                            <textarea id="message" name="message" required>${contactMessage}</textarea>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" name="address" value="${contactAddress}" class="form-control">
                         </div>
 
-                        <button type="submit" class="submit-btn">Send Message</button>
+                        <div class="form-group">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" name="message" required class="form-control">${contactMessage}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn-send-message">Send Message</button>
                     </form>
                 </div>
             </div>

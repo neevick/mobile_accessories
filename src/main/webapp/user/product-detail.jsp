@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -17,6 +17,19 @@
     <main class="main-content">
         <div class="container">
             <a href="${pageContext.request.contextPath}/products" class="btn btn-outline mb-2">&larr; Back to Products</a>
+
+            <c:if test="${not empty sessionScope.success}">
+                <div class="alert alert-success" style="margin-bottom: 20px; border-radius: 8px;">
+                    ${sessionScope.success}
+                    <c:remove var="success" scope="session"/>
+                </div>
+            </c:if>
+            <c:if test="${not empty sessionScope.error}">
+                <div class="alert alert-danger" style="margin-bottom: 20px; border-radius: 8px;">
+                    ${sessionScope.error}
+                    <c:remove var="error" scope="session"/>
+                </div>
+            </c:if>
 
             <div class="d-flex gap-2" style="flex-wrap:wrap">
                 <!-- Product Image -->

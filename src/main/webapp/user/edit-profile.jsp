@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +31,8 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Full Name *</label>
-                            <input type="text" name="fullName" class="form-control" value="${profileUser.fullName}" required pattern="[A-Za-z\s]+">
+                            <input type="text" name="fullName" class="form-control" value="${profileUser.fullName}" required minlength="2" maxlength="100" pattern="[A-Za-z\s]+">
+                            <span class="form-text">Letters and spaces only (2-100 chars)</span>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Email *</label>
@@ -39,7 +40,8 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Phone *</label>
-                            <input type="tel" name="phone" class="form-control" value="${profileUser.phone}" required pattern="[0-9]{10,15}">
+                            <input type="tel" name="phone" class="form-control" value="${profileUser.phone}" required minlength="10" maxlength="15" pattern="[0-9]{10,15}">
+                            <span class="form-text">10-15 digits</span>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Address</label>
