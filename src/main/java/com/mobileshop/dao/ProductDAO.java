@@ -101,7 +101,7 @@ public class ProductDAO {
 
     public List<Product> getFeaturedProducts(int limit) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.status = 'active' ORDER BY p.created_at ASC LIMIT ?";
+        String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.category_id WHERE p.status = 'active' ORDER BY p.created_at DESC LIMIT ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;

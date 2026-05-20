@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css?v=3">
 </head>
 <body>
-    <jsp:include page="/WEB-INF/includes/navbar.jsp">
-        <jsp:param name="type" value="user"/>
-    </jsp:include>
+   <jsp:include page="/WEB-INF/includes/navbar.jsp">
+    <jsp:param name="type" value="${sessionScope.userRole == 'admin' ? 'admin' : 'user'}"/>
+</jsp:include>
 
     <main class="main-content">
         <div class="container">
@@ -45,7 +45,9 @@
                     <div class="card">
                         <div class="card-header"><h3>Quick Links</h3></div>
                         <div class="card-body">
-                            <a href="${pageContext.request.contextPath}/orders?action=history" class="btn btn-outline btn-block mb-1">My Orders</a>
+                            <c:if test="${sessionScope.userRole != 'admin'}">
+    <a href="${pageContext.request.contextPath}/orders?action=history" class="btn btn-outline btn-block mb-1">My Orders</a>
+</c:if>
                             <a href="${pageContext.request.contextPath}/profile?action=changePassword" class="btn btn-outline btn-block">Change Password</a>
                         </div>
                     </div>
