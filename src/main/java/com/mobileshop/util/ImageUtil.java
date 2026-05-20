@@ -1,140 +1,472 @@
 package com.mobileshop.util;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.*;
-import java.nio.file.Paths;
-import java.sql.*;
+import java.net.URISyntaxException;
+import java.nio.file.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Locale;
+import java.util.Set;
 
-/**
- * ProductImageUtil
- * ------------------------------------------------------------------
- * Utility class responsible for reading and streaming product images.
- *
- * Usage in your servlet:
- *   ProductImageUtil.streamImage(productId, getServletContext(), response);
- * ------------------------------------------------------------------
- */
 public class ImageUtil {
 
-    /**
-     * Fetches the image filename from DB, then streams the image file
-     * to the HTTP response.
-     *
-     * @param productId      the product whose image should be served
-     * @param servletContext used to resolve the file path on disk
-     * @param response       the HttpServletResponse to write the image into
-     */
-    public static void streamImage(int productId,
-                                   ServletContext servletContext,
-                                   HttpServletResponse response) throws IOException {
+    private static final String[] ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "webp"};
+    private static final String PROJECT_DIR_PROPERTY = "mobile.accessories.project.dir";
+    private static final String PROJECT_DIR_ENV = "MOBILE_ACCESSORIES_PROJECT_DIR";
+    private static final String PROJECT_FOLDER_NAME = "mobile_accessories";
+    private static final Path WEBAPP_IMAGE_DIR = Paths.get("src", "main", "webapp", "resources", "images");
+    private static Path cachedProjectDir;
 
-        // 1. Get image filename from database
-        String imageName = getImageFilename(productId);
-
-        if (imageName == null || imageName.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "No image found for product ID: " + productId);
-            return;
-        }
-
-        // 2. Sanitise – prevent path traversal attacks
-        imageName = Paths.get(imageName).getFileName().toString();
-
-        // 3. Resolve absolute path on disk
-        //    Files must be stored at: <webapp-root>/resources/images/<filename>
-        String absolutePath = servletContext.getRealPath("/resources/images/" + imageName);
-        File imageFile = new File(absolutePath);
-
-        if (!imageFile.exists() || !imageFile.isFile()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND,
-                    "Image file not found on disk: " + imageName);
-            return;
-        }
-
-        // 4. Detect MIME type (image/jpeg, image/png, image/webp …)
-        String mimeType = servletContext.getMimeType(imageName);
-        if (mimeType == null) {
-            mimeType = "image/jpeg"; // safe fallback
-        }
-
-        // 5. Set response headers
-        response.setContentType(mimeType);
-        response.setContentLengthLong(imageFile.length());
-        response.setHeader("Cache-Control", "public, max-age=3600"); // cache 1 hour
-
-        // 6. Stream bytes to client
-        streamBytes(imageFile, response.getOutputStream());
+    public static String saveImage(InputStream inputStream, String originalFileName, String contextRealPath) {
+        return saveImage(inputStream, originalFileName, contextRealPath, null, null);
     }
 
-    /**
-     * Overload: stream a raw byte array (e.g. if you store images as BLOBs in DB).
-     *
-     * @param imageBytes the raw image bytes fetched from DB
-     * @param mimeType   e.g. "image/jpeg"
-     * @param response   the HttpServletResponse to write the image into
-     */
-    public static void streamImageBytes(byte[] imageBytes,
-                                        String mimeType,
-                                        HttpServletResponse response) throws IOException {
+    public static String saveImage(InputStream inputStream, String originalFileName, String contextRealPath, String productName, String brand) {
+        return saveImage(inputStream, originalFileName, contextRealPath, productName, brand, null);
+    }
 
-        if (imageBytes == null || imageBytes.length == 0) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image data is empty.");
-            return;
+    private static String saveImage(InputStream inputStream, String originalFileName, String contextRealPath, String productName, String brand, String replaceableFileName) {
+        if (inputStream == null || originalFileName == null || originalFileName.isEmpty()) {
+            return null;
         }
-
-        if (mimeType == null || mimeType.isEmpty()) {
-            mimeType = "image/jpeg";
+        String extension = getFileExtension(originalFileName).toLowerCase();
+        if (!isValidExtension(extension)) {
+            System.err.println("Invalid image extension: " + extension);
+            return null;
         }
-
-        response.setContentType(mimeType);
-        response.setContentLength(imageBytes.length);
-        response.setHeader("Cache-Control", "public, max-age=3600");
-
-        try (OutputStream out = new BufferedOutputStream(response.getOutputStream())) {
-            out.write(imageBytes);
+        try {
+            Path runtimeImageDir = getRuntimeImageDirectory(contextRealPath);
+            Path sourceImageDir = getSourceImageDirectory(contextRealPath);
+            if (sourceImageDir == null) {
+                System.err.println("Could not save image because src/main/webapp/resources/images was not found.");
+                return null;
+            }
+            Files.createDirectories(runtimeImageDir);
+            Files.createDirectories(sourceImageDir);
+            String fileName = buildImageFileName(originalFileName, productName, brand, extension, runtimeImageDir, sourceImageDir, replaceableFileName);
+            Path targetPath = runtimeImageDir.resolve(fileName);
+            Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            copyToSourceImageDirectory(targetPath, fileName, sourceImageDir);
+            System.out.println("Image saved successfully: " + targetPath);
+            System.out.println("Image copied to source resources folder: " + sourceImageDir.resolve(fileName));
+            return fileName;
+        } catch (IOException e) {
+            System.err.println("Error saving image: " + e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 
-    // ── Private Helpers ───────────────────────────────────────────────────────
+    public static String updateImage(InputStream inputStream, String originalFileName, String oldFileName, String contextRealPath) {
+        return updateImage(inputStream, originalFileName, oldFileName, contextRealPath, null, null);
+    }
 
-    /**
-     * Queries the database for the image filename of a given product.
-     *
-     * @param productId the product ID
-     * @return the image filename (e.g. "microfiber.jpg"), or null if not found
-     */
-    private static String getImageFilename(int productId) {
-        // Replace with your actual DB connection utility class
-        String sql = "SELECT image FROM products WHERE id = ?";
+    public static String updateImage(InputStream inputStream, String originalFileName, String oldFileName, String contextRealPath, String productName, String brand) {
+        String savedFileName = saveImage(inputStream, originalFileName, contextRealPath, productName, brand, oldFileName);
+        if (savedFileName != null && oldFileName != null && !oldFileName.isEmpty()) {
+            if (!savedFileName.equals(oldFileName)) {
+                deleteImage(oldFileName, contextRealPath);
+            }
+        }
+        return savedFileName;
+    }
 
-        try (Connection conn = DBUtil.getConnection();               // ← your DB util
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, productId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("image");   // column name in your products table
+    public static boolean deleteImage(String fileName, String contextRealPath) {
+        if (fileName == null || fileName.isEmpty()) {
+            return true;
+        }
+        try {
+            boolean deleted = false;
+            Path runtimeFilePath = getRuntimeImageDirectory(contextRealPath).resolve(fileName);
+            if (Files.deleteIfExists(runtimeFilePath)) {
+                deleted = true;
+                System.out.println("Runtime image deleted successfully: " + runtimeFilePath);
+            }
+            Path sourceImageDir = getSourceImageDirectory(contextRealPath);
+            if (sourceImageDir != null) {
+                Path sourceFilePath = sourceImageDir.resolve(fileName);
+                if (!sourceFilePath.normalize().equals(runtimeFilePath.normalize())
+                        && Files.deleteIfExists(sourceFilePath)) {
+                    deleted = true;
+                    System.out.println("Source image deleted successfully: " + sourceFilePath);
                 }
             }
-        } catch (SQLException e) {
-            System.err.println("[ProductImageUtil] DB error fetching image: " + e.getMessage());
+            return deleted;
+        } catch (IOException e) {
+            System.err.println("Error deleting image: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static String getSubmittedFileName(jakarta.servlet.http.Part part) {
+        String header = part.getHeader("content-disposition");
+        if (header == null) return null;
+        for (String token : header.split(";")) {
+            token = token.trim();
+            if (token.startsWith("filename")) {
+                String filename = token.substring(token.indexOf('=') + 2, token.length() - 1);
+                int lastSep = Math.max(filename.lastIndexOf('/'), filename.lastIndexOf('\\'));
+                if (lastSep >= 0) filename = filename.substring(lastSep + 1);
+                return filename;
+            }
         }
         return null;
     }
 
-    /**
-     * Streams a File's bytes into the given OutputStream efficiently.
-     */
-    private static void streamBytes(File file, OutputStream out) throws IOException {
-        try (InputStream in  = new BufferedInputStream(new FileInputStream(file));
-             OutputStream bOut = new BufferedOutputStream(out)) {
+    private static String getFileExtension(String fileName) {
+        int lastDot = fileName.lastIndexOf('.');
+        if (lastDot == -1 || lastDot == fileName.length() - 1) return "";
+        return fileName.substring(lastDot + 1);
+    }
 
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = in.read(buffer)) != -1) {
-                bOut.write(buffer, 0, bytesRead);
+    private static boolean isValidExtension(String extension) {
+        for (String allowed : ALLOWED_EXTENSIONS) {
+            if (allowed.equals(extension)) return true;
+        }
+        return false;
+    }
+
+    private static String buildImageFileName(String originalFileName, String productName, String brand, String extension, Path runtimeImageDirectory, Path sourceImageDirectory, String replaceableFileName) {
+        String baseName = cleanFileName(productName);
+        if (baseName.isEmpty()) {
+            baseName = cleanFileName(removeFileExtension(originalFileName));
+        }
+        if (baseName.isEmpty()) {
+            baseName = "product-image";
+        }
+
+        // Keep the product name readable and avoid overwriting another image.
+        String fileName = baseName + "." + extension;
+        int counter = 2;
+        while (imageExists(runtimeImageDirectory, fileName) || imageExists(sourceImageDirectory, fileName)) {
+            if (fileName.equals(replaceableFileName)) {
+                return fileName;
+            }
+            fileName = baseName + "-" + counter + "." + extension;
+            counter++;
+        }
+        return fileName;
+    }
+
+    private static boolean imageExists(Path imageDirectory, String fileName) {
+        return imageDirectory != null && Files.exists(imageDirectory.resolve(fileName));
+    }
+
+    private static String cleanFileName(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.trim().replaceAll("[\\\\/:*?\"<>|]", "").replaceAll("\\s+", " ");
+    }
+
+    public static void syncImagesToRuntime(String contextRealPath) {
+        try {
+            Path sourceImageDir = getSourceImageDirectory(contextRealPath);
+            if (sourceImageDir == null) {
+                return;
+            }
+            Path runtimeImageDir = getRuntimeImageDirectory(contextRealPath);
+            if (runtimeImageDir.normalize().equals(sourceImageDir.normalize())
+                    || !Files.isDirectory(sourceImageDir)) {
+                return;
+            }
+
+            Files.createDirectories(runtimeImageDir);
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourceImageDir)) {
+                for (Path sourceImage : stream) {
+                    if (Files.isRegularFile(sourceImage)) {
+                        Path runtimeImage = runtimeImageDir.resolve(sourceImage.getFileName().toString());
+                        Files.copy(sourceImage, runtimeImage, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error syncing images to runtime folder: " + e.getMessage());
+        }
+    }
+
+    public static String resolveProductImage(String imageFileName, String productName, String brand) {
+        return resolveProductImage(imageFileName, productName, brand, null);
+    }
+
+    public static String resolveProductImage(String imageFileName, String productName, String brand, String contextRealPath) {
+        String currentImage = imageFileName == null ? "" : imageFileName.trim();
+
+        Path runtimeImageDir = getRuntimeImageDirectory(contextRealPath);
+        if (!currentImage.isEmpty() && Files.isRegularFile(runtimeImageDir.resolve(currentImage))) {
+            return currentImage;
+        }
+
+        Path sourceImageDir = getSourceImageDirectory(contextRealPath);
+        if (sourceImageDir != null && !currentImage.isEmpty() && Files.isRegularFile(sourceImageDir.resolve(currentImage))) {
+            return currentImage;
+        }
+
+        String matchedFileName = findMatchingImageFile(runtimeImageDir, productName, brand);
+        if (matchedFileName != null) {
+            return matchedFileName;
+        }
+
+        matchedFileName = sourceImageDir == null ? null : findMatchingImageFile(sourceImageDir, productName, brand);
+        if (matchedFileName != null) {
+            return matchedFileName;
+        }
+
+        return currentImage.isEmpty() ? null : currentImage;
+    }
+
+    public static String getExpectedProductImageName(String productName, String brand) {
+        return getExpectedProductImageName(productName, brand, null, null);
+    }
+
+    private static String getExpectedProductImageName(String productName, String brand, Path firstImageDir, Path secondImageDir) {
+        String baseName = cleanFileName(productName);
+        if (baseName.isEmpty()) {
+            return null;
+        }
+
+        String[] extensions = {"jpg", "jpeg", "png", "gif", "webp"};
+        for (String extension : extensions) {
+            String fileName = baseName + "." + extension;
+            if (isExistingImage(firstImageDir, fileName) || isExistingImage(secondImageDir, fileName)) {
+                return fileName;
             }
         }
+        return null;
+    }
+
+    private static boolean isExistingImage(Path imageDir, String fileName) {
+        return imageDir != null && Files.isRegularFile(imageDir.resolve(fileName));
+    }
+
+    private static String findMatchingImageFile(Path imageDirectory, String productName, String brand) {
+        if (!Files.isDirectory(imageDirectory)) {
+            return null;
+        }
+
+        String productKey = normalizeImageName(productName);
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(imageDirectory)) {
+            for (Path imagePath : stream) {
+                if (!Files.isRegularFile(imagePath)) {
+                    continue;
+                }
+
+                String fileName = imagePath.getFileName().toString();
+                String extension = getFileExtension(fileName).toLowerCase(Locale.ROOT);
+                if (!isValidExtension(extension)) {
+                    continue;
+                }
+
+                String fileKey = normalizeImageName(removeFileExtension(fileName));
+                if (!productKey.isEmpty() && fileKey.contains(productKey)) {
+                    return fileName;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error finding matching product image: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private static String removeFileExtension(String fileName) {
+        int lastDot = fileName.lastIndexOf('.');
+        if (lastDot <= 0) {
+            return fileName;
+        }
+        return fileName.substring(0, lastDot);
+    }
+
+    private static String normalizeImageName(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]", "");
+    }
+
+    public static Path getSourceImageDirectory(String contextRealPath) {
+        if (cachedProjectDir != null && Files.isDirectory(cachedProjectDir.resolve(WEBAPP_IMAGE_DIR))) {
+            return cachedProjectDir.resolve(WEBAPP_IMAGE_DIR);
+        }
+
+        Path projectDir = findConfiguredProjectDirectory();
+        for (Path start : getProjectSearchStarts(contextRealPath)) {
+            if (projectDir != null) {
+                break;
+            }
+            projectDir = findProjectDirectory(start);
+        }
+        if (projectDir == null) {
+            projectDir = findProjectDirectoryInCommonCloneLocations();
+        }
+        if (projectDir != null) {
+            cachedProjectDir = projectDir;
+            System.out.println("Using source image directory: " + projectDir.resolve(WEBAPP_IMAGE_DIR));
+            return projectDir.resolve(WEBAPP_IMAGE_DIR);
+        }
+        System.err.println("Could not find source src/main/webapp/resources/images folder.");
+        return null;
+    }
+
+    private static Set<Path> getProjectSearchStarts(String contextRealPath) {
+        Set<Path> starts = new LinkedHashSet<>();
+        addPath(starts, getClassLocation());
+        addPath(starts, Paths.get("").toAbsolutePath());
+        addPropertyPath(starts, "user.dir");
+        addPropertyPath(starts, "catalina.base");
+        addPropertyPath(starts, "catalina.home");
+        addPropertyPath(starts, "wtp.deploy");
+        if (contextRealPath != null && !contextRealPath.trim().isEmpty()) {
+            Path realPath = Paths.get(contextRealPath).toAbsolutePath();
+            addPath(starts, realPath);
+            Path workspacePath = findEclipseWorkspaceFromDeployedPath(realPath);
+            addPath(starts, workspacePath);
+        }
+        return starts;
+    }
+
+    private static Path findProjectDirectory(Path start) {
+        Path current = Files.isRegularFile(start) ? start.getParent() : start;
+        while (current != null) {
+            if (Files.isDirectory(current.resolve(WEBAPP_IMAGE_DIR))) {
+                return current;
+            }
+            current = current.getParent();
+        }
+        return null;
+    }
+
+    private static Path findConfiguredProjectDirectory() {
+        String configuredPath = System.getProperty(PROJECT_DIR_PROPERTY);
+        if (configuredPath == null || configuredPath.trim().isEmpty()) {
+            configuredPath = System.getenv(PROJECT_DIR_ENV);
+        }
+        if (configuredPath == null || configuredPath.trim().isEmpty()) {
+            return null;
+        }
+
+        Path projectDir = Paths.get(configuredPath.trim()).toAbsolutePath();
+        if (Files.isDirectory(projectDir.resolve(WEBAPP_IMAGE_DIR))) {
+            return projectDir;
+        }
+        return null;
+    }
+
+    private static Path findEclipseWorkspaceFromDeployedPath(Path deployedPath) {
+        Path current = deployedPath;
+        while (current != null) {
+            if (".metadata".equalsIgnoreCase(current.getFileName() == null ? "" : current.getFileName().toString())) {
+                return current.getParent();
+            }
+            current = current.getParent();
+        }
+        return null;
+    }
+
+    private static Path findProjectDirectoryInCommonCloneLocations() {
+        Set<Path> roots = new LinkedHashSet<>();
+        addPropertyPath(roots, "user.home");
+
+        String userHome = System.getProperty("user.home");
+        if (userHome != null && !userHome.trim().isEmpty()) {
+            Path home = Paths.get(userHome).toAbsolutePath();
+            for (Path child : Arrays.asList(
+                    Paths.get("Desktop"),
+                    Paths.get("Documents"),
+                    Paths.get("OneDrive"),
+                    Paths.get("OneDrive", "Desktop"),
+                    Paths.get("OneDrive", "Documents"),
+                    Paths.get("eclipse-workspace"))) {
+                addPath(roots, home.resolve(child));
+            }
+        }
+
+        for (Path root : roots) {
+            Path projectDir = findProjectDirectoryUnder(root, 10);
+            if (projectDir != null) {
+                return projectDir;
+            }
+        }
+        return null;
+    }
+
+    private static Path findProjectDirectoryUnder(Path root, int maxDepth) {
+        if (root == null || maxDepth < 0 || !Files.isDirectory(root)) {
+            return null;
+        }
+
+        if (PROJECT_FOLDER_NAME.equalsIgnoreCase(root.getFileName() == null ? "" : root.getFileName().toString())
+                && Files.isDirectory(root.resolve(WEBAPP_IMAGE_DIR))) {
+            return root.toAbsolutePath();
+        }
+        if (Files.isDirectory(root.resolve(WEBAPP_IMAGE_DIR))) {
+            return root.toAbsolutePath();
+        }
+        if (maxDepth == 0) {
+            return null;
+        }
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(root)) {
+            for (Path child : stream) {
+                if (!Files.isDirectory(child) || isIgnoredSearchDirectory(child)) {
+                    continue;
+                }
+                Path projectDir = findProjectDirectoryUnder(child, maxDepth - 1);
+                if (projectDir != null) {
+                    return projectDir;
+                }
+            }
+        } catch (IOException | SecurityException e) {
+            return null;
+        }
+        return null;
+    }
+
+    private static boolean isIgnoredSearchDirectory(Path path) {
+        String name = path.getFileName() == null ? "" : path.getFileName().toString().toLowerCase(Locale.ROOT);
+        return name.equals(".git")
+                || name.equals("target")
+                || name.equals("bin")
+                || name.equals("node_modules")
+                || name.equals(".metadata")
+                || name.equals("appdata");
+    }
+
+    private static void addPropertyPath(Set<Path> paths, String propertyName) {
+        String value = System.getProperty(propertyName);
+        if (value != null && !value.trim().isEmpty()) {
+            addPath(paths, Paths.get(value).toAbsolutePath());
+        }
+    }
+
+    private static void addPath(Set<Path> paths, Path path) {
+        if (path != null) {
+            paths.add(path.toAbsolutePath().normalize());
+        }
+    }
+
+    private static Path getClassLocation() {
+        try {
+            return Paths.get(ImageUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toAbsolutePath();
+        } catch (URISyntaxException | NullPointerException | IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private static Path getRuntimeImageDirectory(String contextRealPath) {
+        if (contextRealPath == null || contextRealPath.isEmpty()) {
+            return WEBAPP_IMAGE_DIR.toAbsolutePath();
+        }
+        return Paths.get(contextRealPath, "resources", "images");
+    }
+
+    private static void copyToSourceImageDirectory(Path runtimeImage, String fileName, Path sourceImageDir) throws IOException {
+        Path sourceImage = sourceImageDir.resolve(fileName);
+        if (sourceImage.normalize().equals(runtimeImage.normalize())) {
+            return;
+        }
+        Files.createDirectories(sourceImageDir);
+        Files.copy(runtimeImage, sourceImage, StandardCopyOption.REPLACE_EXISTING);
     }
 }
