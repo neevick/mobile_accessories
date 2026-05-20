@@ -3,10 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2026 at 10:03 PM
+-- Generation Time: May 20, 2026 at 02:33 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -20,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `mobile_accessories`
 --
+CREATE DATABASE IF NOT EXISTS `mobile_accessories` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `mobile_accessories`;
 
 -- --------------------------------------------------------
 
@@ -68,7 +71,7 @@ INSERT INTO `categories` (`category_id`, `name`, `description`, `created_at`) VA
 (12, 'Gaming Accessories', 'Mobile Gaming Equipment', '2026-05-16 06:47:14'),
 (13, 'Selfie Accessories', 'Mobile Photography Tools', '2026-05-16 06:48:46'),
 (14, 'Storage Devices', 'Extra Data Storage', '2026-05-16 06:49:11'),
-(15, 'Cleaning Accessories', 'Device Cleaning Tools', '2026-05-16 06:50:07'),
+(15, 'Cleaning Accessories', 'Device Cleaning Tool', '2026-05-16 06:50:07'),
 (16, 'Cooling Accessories', 'Device temperature control', '2026-05-16 07:17:29');
 
 -- --------------------------------------------------------
@@ -83,11 +86,18 @@ CREATE TABLE `contacts` (
   `email` varchar(100) NOT NULL,
   `subject` varchar(200) NOT NULL,
   `message` text NOT NULL,
-  `phone` varchar(30) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(11) DEFAULT NULL
+  `user_id` int(11) DEFAULT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contacts`
+--
+
+INSERT INTO `contacts` (`contact_id`, `name`, `email`, `subject`, `message`, `created_at`, `user_id`, `phone`, `address`) VALUES
+(2, 'Neevik Thapa', 'neevik980@gmail.com', 'Contact Inquiry from Neevik Thapa', 'Very good\r\n', '2026-05-20 07:44:47', NULL, '9814120334', 'Shuklagandaki-5, Belchautara, Tanahun');
 
 -- --------------------------------------------------------
 
@@ -115,7 +125,9 @@ INSERT INTO `orders` (`order_id`, `user_id`, `total_amount`, `status`, `shipping
 (2, 2, 648.00, 'confirmed', 'Syanja', '9812345670', '2026-05-16 08:35:01', '2026-05-19 04:48:56'),
 (3, 2, 1499.00, 'shipped', 'Syanja', '9812345670', '2026-05-16 08:36:11', '2026-05-19 04:48:56'),
 (4, 3, 1598.00, 'confirmed', 'Lekhnath', '9876543211', '2026-05-16 08:37:53', '2026-05-19 04:48:56'),
-(5, 4, 1198.00, 'confirmed', 'Lamachaur, PKR', '9804111994', '2026-05-16 08:48:53', '2026-05-19 04:48:56');
+(5, 4, 1198.00, 'confirmed', 'Lamachaur, PKR', '9804111994', '2026-05-16 08:48:53', '2026-05-19 04:48:56'),
+(6, 2, 899.00, 'confirmed', 'Syanja', '9812345670', '2026-05-19 21:44:55', '2026-05-20 12:14:17'),
+(7, 2, 4795.00, 'pending', 'Syanja', '9812345670', '2026-05-20 12:26:49', '2026-05-20 12:26:49');
 
 -- --------------------------------------------------------
 
@@ -145,7 +157,10 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `quantity`
 (7, 3, 3, 1, 1499.00),
 (8, 4, 2, 1, 999.00),
 (9, 4, 14, 1, 599.00),
-(10, 5, 14, 2, 599.00);
+(10, 5, 14, 2, 599.00),
+(11, 6, 1, 1, 899.00),
+(12, 7, 2, 3, 999.00),
+(13, 7, 1, 2, 899.00);
 
 -- --------------------------------------------------------
 
@@ -172,8 +187,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `category_id`, `brand`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, '20W USB-C Charger', 'Quick Charging adapter', 899.00, 11, 2, 'Anker', '20W USB-C Charger.jpg', 'active', '2026-05-16 06:55:21', '2026-05-19 19:33:38'),
-(2, 'Dual Port Charger', 'Charge Two Devices', 999.00, 14, 2, 'Baseus', 'Dual Port Charger.jpg', 'active', '2026-05-16 06:56:10', '2026-05-19 19:33:39'),
+(1, '20W USB-C Charger', 'Quick Charging adapter', 899.00, 8, 2, 'Anker', '20W USB-C Charger.jpg', 'active', '2026-05-16 06:55:21', '2026-05-20 12:26:49'),
+(2, 'Dual Port Charger', 'Charge Two Devices', 999.00, 11, 2, 'Baseus', 'Dual Port Charger.jpg', 'active', '2026-05-16 06:56:10', '2026-05-20 12:26:49'),
 (3, '10000mAh Power Bank', 'Compact battery backup', 1499.00, 13, 1, 'Xiaomi', '10000mAh Power Bank.jpg', 'active', '2026-05-16 06:58:15', '2026-05-19 19:33:39'),
 (4, '20000mAh Power Bank', 'Extended charging capacity', 2799.00, 13, 1, 'Anker', '20000mAh Power Bank.jpg', 'active', '2026-05-16 06:58:42', '2026-05-19 19:33:39'),
 (5, 'Wireless Power Bank', 'Cable-free charging support', 3299.00, 13, 1, 'Baseus', 'Wireless Power Bank.jpg', 'active', '2026-05-16 06:59:29', '2026-05-19 19:33:39'),
@@ -197,13 +212,14 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `
 (25, 'Magnetic Wireless Charger', 'Snap charging support', 3499.00, 13, 5, 'Apple', 'Magnetic Wireless Charger.jpg', 'active', '2026-05-16 07:19:47', '2026-05-19 19:33:39'),
 (26, 'Screen Cleaning Kit', 'Removes dust marks', 699.00, 12, 15, 'WHOOSH!', 'Screen Cleaning Kit.jpg', 'active', '2026-05-16 07:21:08', '2026-05-19 19:33:39'),
 (27, 'Cleaning Brush Set', 'Keyboard dust removal', 399.00, 20, 15, 'Hama', 'Cleaning Brush Set.jpg', 'active', '2026-05-16 07:21:41', '2026-05-19 19:33:39'),
-(28, 'Microfiber Cloth', 'Gentle screen cleaning', 199.00, 10, 15, '3M', 'Microfiber Cloth.jpg', 'active', '2026-05-16 07:22:14', '2026-05-19 19:33:39'),
-(29, 'Microfiber Cloth', 'nclkanklnq', 3242.00, 24, 15, 'weffwef', 'Microfiber Cloth.jpg', 'active', '2026-05-19 07:47:37', '2026-05-19 19:33:39'),
+(28, 'Microfiber Cloth', 'Gentle screen cleaning', 199.00, 10, 15, '3M', 'Microfiber Cloth-2.png', 'active', '2026-05-16 07:22:14', '2026-05-20 12:28:40'),
+(29, 'Microfiber Cloth', 'nclkanklnq', 3242.00, 24, 15, 'weffwef', 'Microfiber Cloth.png', 'active', '2026-05-19 07:47:37', '2026-05-20 12:23:13'),
 (37, 'test2', 'test2', 2.00, 2, 8, '2', 'test2.png', 'active', '2026-05-19 14:55:37', '2026-05-19 19:33:39'),
 (38, 'test3', 'test3', 3.00, 3, 8, 'test3', 'test3.png', 'active', '2026-05-19 18:30:05', '2026-05-19 19:33:39'),
 (39, 'test4', 'test4', 4.00, 4, 8, 'test', 'test4.png', 'active', '2026-05-19 19:35:53', '2026-05-19 19:35:53'),
 (40, 'test5', 'test5', 5.00, 5, 8, 'test', 'test5.png', 'active', '2026-05-19 19:47:28', '2026-05-19 19:47:28'),
-(41, 'test6', 'test6', 6.00, 6, 8, 'test', 'test6.png', 'active', '2026-05-19 19:58:50', '2026-05-19 19:58:50');
+(41, 'test6', 'test6', 6.00, 6, 8, 'test', 'test6.png', 'active', '2026-05-19 19:58:50', '2026-05-19 19:58:50'),
+(44, 'fwefew', 'eff', 2424.00, 23, 16, 'MEMO', 'fwefew.jpg', 'active', '2026-05-20 12:28:07', '2026-05-20 12:28:07');
 
 -- --------------------------------------------------------
 
@@ -253,11 +269,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `full_name`, `phone`, `address`, `role`, `created_at`, `updated_at`) VALUES
-(1, 'vijan', 'vijan@gmail.com', '$2a$10$NjzrwQZdryPgS3SCGZTiqO9MCelolVF6GtgSeyLZ2YFB3DshcC4Ee', 'Vijan Rana', '9876543210', 'PKR', 'admin', '2026-05-15 16:03:06', '2026-05-15 16:03:32'),
 (2, 'neevik', 'neevik@gmail.com', '$2a$10$6DL5rupMwhtti25vNPCBdOrnbCt.9ePpRaOjZr4QkXJzEsL4/gGEC', 'Neevik Thapa', '9812345670', 'Syanja', 'user', '2026-05-15 16:04:49', '2026-05-19 11:49:50'),
 (3, 'arun', 'arun@gmail.com', '$2a$10$hE14bNaO.C1m96/Sdx0q8eygeOVrOhKqcxkCbBdD4gYZB4Rav/jD2', 'Arun Grg', '9876543211', 'Lekhnath', 'user', '2026-05-15 16:05:55', '2026-05-15 16:05:55'),
 (4, 'aashish', 'aashish@gmail.com', '$2a$10$vlM657iFDndtMZ6qw1yiPO1YPHJS6fbt9gjhdp7LtUEgZyXITTdgO', 'Aashish Gyawali', '9804111994', 'Lamachaur, PKR', 'user', '2026-05-15 16:07:31', '2026-05-15 16:07:31'),
-(5, 'barun', 'barun@gmail.com', '$2a$10$Ig8jMFva5lSTO8EEpCw6S.916L9fpSXyYl02hG99h2Viz9qEKzAMK', 'Barun Thapa', '9826636379', 'Lamachaur, PKR', 'user', '2026-05-15 16:09:04', '2026-05-15 16:09:04');
+(5, 'barun', 'barun@gmail.com', '$2a$10$Ig8jMFva5lSTO8EEpCw6S.916L9fpSXyYl02hG99h2Viz9qEKzAMK', 'Barun Thapa', '9826636379', 'Lamachaur, PKR', 'admin', '2026-05-15 16:09:04', '2026-05-20 12:29:58'),
+(6, 'vijan', 'vijanu2@gmail.com', '$2a$10$fL0R16Q/Jf2JUBRx/jt32.wwHsGZJpd6qunHBYp.Tvyjl2FAIfuna', 'Vijan Rana', '9813232232', 'damauli', 'admin', '2026-05-20 07:35:31', '2026-05-20 07:35:52'),
+(7, 'rishav', 'rishav55@gmail.com', '$2a$10$bJ4f9hTu/FoJy/g43q88f.FVTf526A7MWW7RQcH.oays6YWJ93a0O', 'Rishav Basnet', '9818978999', 'lamachaur', 'user', '2026-05-20 10:17:59', '2026-05-20 10:17:59');
 
 --
 -- Indexes for dumped tables
@@ -335,37 +352,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -377,7 +394,7 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -421,6 +438,7 @@ ALTER TABLE `products`
 ALTER TABLE `reviews`
   ADD CONSTRAINT `fk_reviews_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
