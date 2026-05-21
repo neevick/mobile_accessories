@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2026 at 02:33 PM
+-- Generation Time: May 21, 2026 at 07:15 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `mobile_accessories`
 --
-CREATE DATABASE IF NOT EXISTS `mobile_accessories` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `mobile_accessories`;
 
 -- --------------------------------------------------------
 
@@ -212,14 +210,19 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock`, `
 (25, 'Magnetic Wireless Charger', 'Snap charging support', 3499.00, 13, 5, 'Apple', 'Magnetic Wireless Charger.jpg', 'active', '2026-05-16 07:19:47', '2026-05-19 19:33:39'),
 (26, 'Screen Cleaning Kit', 'Removes dust marks', 699.00, 12, 15, 'WHOOSH!', 'Screen Cleaning Kit.jpg', 'active', '2026-05-16 07:21:08', '2026-05-19 19:33:39'),
 (27, 'Cleaning Brush Set', 'Keyboard dust removal', 399.00, 20, 15, 'Hama', 'Cleaning Brush Set.jpg', 'active', '2026-05-16 07:21:41', '2026-05-19 19:33:39'),
-(28, 'Microfiber Cloth', 'Gentle screen cleaning', 199.00, 10, 15, '3M', 'Microfiber Cloth-2.png', 'active', '2026-05-16 07:22:14', '2026-05-20 12:28:40'),
-(29, 'Microfiber Cloth', 'nclkanklnq', 3242.00, 24, 15, 'weffwef', 'Microfiber Cloth.png', 'active', '2026-05-19 07:47:37', '2026-05-20 12:23:13'),
-(37, 'test2', 'test2', 2.00, 2, 8, '2', 'test2.png', 'active', '2026-05-19 14:55:37', '2026-05-19 19:33:39'),
-(38, 'test3', 'test3', 3.00, 3, 8, 'test3', 'test3.png', 'active', '2026-05-19 18:30:05', '2026-05-19 19:33:39'),
-(39, 'test4', 'test4', 4.00, 4, 8, 'test', 'test4.png', 'active', '2026-05-19 19:35:53', '2026-05-19 19:35:53'),
-(40, 'test5', 'test5', 5.00, 5, 8, 'test', 'test5.png', 'active', '2026-05-19 19:47:28', '2026-05-19 19:47:28'),
-(41, 'test6', 'test6', 6.00, 6, 8, 'test', 'test6.png', 'active', '2026-05-19 19:58:50', '2026-05-19 19:58:50'),
-(44, 'fwefew', 'eff', 2424.00, 23, 16, 'MEMO', 'fwefew.jpg', 'active', '2026-05-20 12:28:07', '2026-05-20 12:28:07');
+(28, 'Microfiber Cloth', 'Gentle screen cleaning', 199.00, 10, 15, '3M', 'Microfiber Cloth-2.png', 'active', '2026-05-16 07:22:14', '2026-05-21 04:47:46'),
+(45, 'Spigen Rugged Armor Case', 'Slim shockproof black case', 2000.00, 10, 3, 'Spigen', 'Spigen Rugged Armor Case.jpg', 'active', '2026-05-21 04:58:00', '2026-05-21 04:58:00'),
+(46, 'Nillkin CamShield Case', 'Camera protection sliding cover', 1200.00, 8, 3, 'Nillkin', 'Nillkin CamShield Case.jpg', 'active', '2026-05-21 04:59:39', '2026-05-21 04:59:39'),
+(47, 'ESR Clear Silicone Case', 'Transparent soft protective cover', 1300.00, 6, 3, 'ESR', 'ESR Clear Silicone Case.jpg', 'active', '2026-05-21 05:01:09', '2026-05-21 05:01:09'),
+(48, 'JBL C100SI', 'Deep bass wired earphones', 1200.00, 7, 6, 'JBL', 'JBL C100SI.jpg', 'active', '2026-05-21 05:02:09', '2026-05-21 05:02:09'),
+(49, 'Realme Buds T110', 'Wireless gaming earbuds', 3000.00, 8, 6, 'Realme', 'Realme Buds T110.jpg', 'active', '2026-05-21 05:03:19', '2026-05-21 05:03:19'),
+(50, 'boAt Airdopes 141', 'Long battery wireless earbuds', 3000.00, 5, 6, 'boAt', 'boAt Airdopes 141.jpg', 'active', '2026-05-21 05:04:02', '2026-05-21 05:04:02'),
+(51, 'Sony WH-CH520', 'Lightweight wireless headphones', 7000.00, 5, 8, 'Sony', 'Sony WH-CH520.jpg', 'active', '2026-05-21 05:04:49', '2026-05-21 05:04:49'),
+(52, 'JBL Tune 760NC', 'Noise cancelling wireless headset', 11000.00, 7, 7, 'JBL', 'JBL Tune 760NC.jpg', 'active', '2026-05-21 05:06:09', '2026-05-21 05:06:09'),
+(53, 'Logitech G435 Gaming Headset', 'Comfortable lightweight gaming headset', 9000.00, 6, 7, 'Logitech', 'Logitech G435 Gaming Headset.jpg', 'active', '2026-05-21 05:06:47', '2026-05-21 05:06:47'),
+(54, 'Baseus Car Phone Holder', 'Dashboard magnetic mobile holder', 1500.00, 5, 10, 'Baseus', 'Baseus Car Phone Holder.jpg', 'active', '2026-05-21 05:07:32', '2026-05-21 05:07:32'),
+(55, 'UGREEN Desktop Stand Holder', 'Adjustable foldable phone stand', 1200.00, 4, 10, 'UGREEN', 'UGREEN Desktop Stand Holder.jpg', 'active', '2026-05-21 05:08:25', '2026-05-21 05:08:25'),
+(56, 'Portronics Clamp M2 Holder', 'Flexible neck mobile holder', 1500.00, 6, 10, 'Portronics', 'Portronics Clamp M2 Holder.jpg', 'active', '2026-05-21 05:09:13', '2026-05-21 05:09:13');
 
 -- --------------------------------------------------------
 
@@ -382,7 +385,7 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `reviews`

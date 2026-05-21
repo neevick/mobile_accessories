@@ -69,8 +69,7 @@
                                 <input type="text" id="fullName" name="fullName" value="${contactName}" required class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="company">Company</label>
-                                <input type="text" id="company" name="company" value="${contactCompany}" class="form-control">
+                               
                             </div>
                         </div>
 
