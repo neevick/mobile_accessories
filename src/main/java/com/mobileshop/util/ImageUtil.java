@@ -79,14 +79,15 @@ public class ImageUtil {
         }
         try {
             boolean deleted = false;
-            Path runtimeFilePath = getRuntimeImageDirectory(contextRealPath).resolve(fileName);
+            Path runtimeImageDir = getRuntimeImageDirectory(contextRealPath);
+            Path runtimeFilePath = resolveImagePath(runtimeImageDir, fileName);
             if (Files.deleteIfExists(runtimeFilePath)) {
                 deleted = true;
                 System.out.println("Runtime image deleted successfully: " + runtimeFilePath);
             }
             Path sourceImageDir = getSourceImageDirectory(contextRealPath);
             if (sourceImageDir != null) {
-                Path sourceFilePath = sourceImageDir.resolve(fileName);
+                Path sourceFilePath = resolveImagePath(sourceImageDir, fileName);
                 if (!sourceFilePath.normalize().equals(runtimeFilePath.normalize())
                         && Files.deleteIfExists(sourceFilePath)) {
                     deleted = true;
@@ -99,6 +100,16 @@ public class ImageUtil {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private static Path resolveImagePath(Path imageDirectory, String fileName) throws IOException {
+        Path resolvedPath = imageDirectory.resolve(fileName).normalize();
+        Path normalizedDirectory = imageDirectory.toAbsolutePath().normalize();
+        Path absoluteResolvedPath = resolvedPath.toAbsolutePath().normalize();
+        if (!absoluteResolvedPath.startsWith(normalizedDirectory)) {
+            throw new IOException("Invalid image filename: " + fileName);
+        }
+        return resolvedPath;
     }
 
     public static String getSubmittedFileName(jakarta.servlet.http.Part part) {
@@ -376,9 +387,11 @@ public class ImageUtil {
             for (Path child : Arrays.asList(
                     Paths.get("Desktop"),
                     Paths.get("Documents"),
+                    Paths.get("Documents", "Desktop"),
                     Paths.get("OneDrive"),
                     Paths.get("OneDrive", "Desktop"),
                     Paths.get("OneDrive", "Documents"),
+                    Paths.get("OneDrive", "Documents", "Desktop"),
                     Paths.get("eclipse-workspace"))) {
                 addPath(roots, home.resolve(child));
             }
